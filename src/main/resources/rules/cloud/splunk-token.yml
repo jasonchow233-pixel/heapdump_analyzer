@@ -1,0 +1,20 @@
+---
+kind: RegexRule
+metadata:
+  id: splunk-token
+  name: Splunk Auth Token
+  category: cloud
+  severity: HIGH
+  description: Detects Splunk authentication tokens
+spec:
+  pattern: '(?i)splunk.*token\s*[:=]\s*["'']?([a-f0-9-]{36,})["'']?'
+---
+kind: RegexRule
+metadata:
+  id: splunk-password
+  name: Splunk Password
+  category: cloud
+  severity: HIGH
+  description: Detects Splunk passwords
+spec:
+  pattern: '(?i)splunk.*password\s*[:=]\s*["'']?([^\s"'']{8,})["'']?'

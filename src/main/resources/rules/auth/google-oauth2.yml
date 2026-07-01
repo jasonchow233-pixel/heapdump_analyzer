@@ -1,0 +1,30 @@
+---
+kind: RegexRule
+metadata:
+  id: google-oauth2-client-secret
+  name: Google OAuth2 Client Secret
+  category: auth
+  severity: CRITICAL
+  description: Detects Google OAuth2 client secrets (GOCSPX-)
+spec:
+  pattern: '(?i)(clientSecret|client_secret)\s*[:=]\s*["'']?(GOCSPX-[a-zA-Z0-9_-]{28,})["'']?'
+---
+kind: RegexRule
+metadata:
+  id: google-oauth2-client-id
+  name: Google OAuth2 Client ID
+  category: auth
+  severity: HIGH
+  description: Detects Google OAuth2 client IDs
+spec:
+  pattern: '[0-9]+-[a-z0-9_]+\.apps\.googleusercontent\.com'
+---
+kind: RegexRule
+metadata:
+  id: google-oauth2-client-id-assignment
+  name: Google OAuth2 Client ID (assignment)
+  category: auth
+  severity: HIGH
+  description: Detects Google OAuth2 client IDs in assignments
+spec:
+  pattern: '(?i)client_id\s*[:=]\s*["'']?([0-9]+-[a-z0-9_]+\.apps\.googleusercontent\.com)["'']?'

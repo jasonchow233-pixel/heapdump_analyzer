@@ -1,0 +1,40 @@
+---
+kind: RegexRule
+metadata:
+  id: shopify-token-shpat-hex
+  name: Shopify Access Token (shpat hex)
+  category: cloud
+  severity: HIGH
+  description: Detects Shopify shpat access tokens (hex)
+spec:
+  pattern: 'shpat_[a-fA-F0-9]{32}'
+---
+kind: RegexRule
+metadata:
+  id: shopify-token-shpca
+  name: Shopify Custom App Token (shpca)
+  category: cloud
+  severity: HIGH
+  description: Detects Shopify shpca tokens
+spec:
+  pattern: 'shpca_[a-fA-F0-9]{32}'
+---
+kind: RegexRule
+metadata:
+  id: shopify-token-shppa
+  name: Shopify Private App Token (shppa)
+  category: cloud
+  severity: HIGH
+  description: Detects Shopify shppa tokens
+spec:
+  pattern: 'shppa_[a-fA-F0-9]{32}'
+---
+kind: RegexRule
+metadata:
+  id: shopify-token-shpat-generic
+  name: Shopify Access Token (shpat generic)
+  category: cloud
+  severity: HIGH
+  description: Detects Shopify shpat tokens (alphanumeric)
+spec:
+  pattern: 'shpat_[a-zA-Z0-9]{32,}'

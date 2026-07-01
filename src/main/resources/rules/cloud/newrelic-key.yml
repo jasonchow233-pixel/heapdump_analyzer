@@ -1,0 +1,30 @@
+---
+kind: RegexRule
+metadata:
+  id: newrelic-license-key
+  name: New Relic License Key
+  category: cloud
+  severity: HIGH
+  description: Detects New Relic license keys
+spec:
+  pattern: '(?i)(newrelic.*licenseKey|NEW_RELIC_LICENSE_KEY)\s*[:=]\s*["'']?([a-f0-9]{40})["'']?'
+---
+kind: RegexRule
+metadata:
+  id: newrelic-api-key
+  name: New Relic API Key
+  category: cloud
+  severity: HIGH
+  description: Detects New Relic API keys
+spec:
+  pattern: '(?i)(newrelic.*apiKey|NEW_RELIC_API_KEY)\s*[:=]\s*["'']?([a-f0-9-]{40,})["'']?'
+---
+kind: RegexRule
+metadata:
+  id: newrelic-insert-key
+  name: New Relic Insert Key
+  category: cloud
+  severity: HIGH
+  description: Detects New Relic insert keys
+spec:
+  pattern: '(?i)(newrelic.*insertKey|NEW_RELIC_INSERT_KEY)\s*[:=]\s*["'']?([a-fA-Z0-9-]{40,})["'']?'

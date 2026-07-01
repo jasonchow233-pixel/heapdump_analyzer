@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: huawei-cloud-ak
+  name: Huawei Cloud Access Key
+  category: cloud
+  severity: CRITICAL
+  description: Detect Huawei Cloud Access Key IDs (HWFK/HWCK prefix)
+spec:
+  pattern: "HW[F|C]K[A-Za-z0-9]{14,20}"

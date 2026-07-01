@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: gitlab-token
+  name: GitLab Personal Access Token
+  category: auth
+  severity: CRITICAL
+  description: Detect GitLab personal access tokens (glpat- prefix)
+spec:
+  pattern: "glpat-[A-Za-z0-9\\-]{20}"

@@ -1,0 +1,15 @@
+kind: ClassRule
+metadata:
+  id: hikaricp-config
+  name: HikariCP Configuration
+  category: database
+  severity: CRITICAL
+  description: Extract HikariCP connection pool credentials
+spec:
+  className: "com.zaxxer.hikari.HikariConfig"
+  fields:
+    - jdbcUrl
+    - username
+    - password
+    - driverClassName
+    - maximumPoolSize

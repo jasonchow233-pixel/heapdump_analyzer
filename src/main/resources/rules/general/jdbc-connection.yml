@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: jdbc-connection-string
+  name: JDBC Connection String
+  category: database
+  severity: HIGH
+  description: Detect JDBC connection strings in heap string pool
+spec:
+  pattern: "jdbc:[a-z]+://[A-Za-z0-9._\\-]+(:[0-9]+)?/[A-Za-z0-9_\\-]+"

@@ -1,0 +1,41 @@
+---
+kind: RegexRule
+metadata:
+  id: firebase-api-key
+  name: Firebase API Key
+  category: cloud
+  severity: HIGH
+  description: Detects Firebase API keys (AIza prefix)
+spec:
+  pattern: 'AIza[0-9A-Za-z_-]{35}'
+  validator: FirebaseValidator
+---
+kind: RegexRule
+metadata:
+  id: firebase-rtdb-url
+  name: Firebase RTDB URL
+  category: cloud
+  severity: MEDIUM
+  description: Detects Firebase Realtime Database URLs
+spec:
+  pattern: '(?i)firebaseio\.com'
+---
+kind: RegexRule
+metadata:
+  id: firebase-api-url
+  name: Firebase API URL
+  category: cloud
+  severity: MEDIUM
+  description: Detects Firebase API URLs
+spec:
+  pattern: '(?i)firebase\.googleapis\.com'
+---
+kind: RegexRule
+metadata:
+  id: firebase-config-field
+  name: Firebase Config Field
+  category: cloud
+  severity: MEDIUM
+  description: Detects Firebase config fields (messagingSenderId, storageBucket, databaseUrl)
+spec:
+  pattern: '(?i)(messagingSenderId|storageBucket|databaseUrl)\s*[:=]\s*["'']?[0-9a-zA-Z._/-]+["'']?'

@@ -1,0 +1,10 @@
+kind: RegexRule
+metadata:
+  id: slack-token
+  name: Slack Token
+  category: auth
+  severity: CRITICAL
+  description: Detect Slack API tokens (xoxb-/xoxp-/xoxo- prefixes)
+spec:
+  pattern: "xox[baprs]-[0-9]{10,13}-[0-9]{10,13}-[a-zA-Z0-9]{24,34}"
+  validator: SlackTokenValidator

@@ -1,0 +1,20 @@
+---
+kind: RegexRule
+metadata:
+  id: datadog-api-key
+  name: Datadog API Key
+  category: cloud
+  severity: HIGH
+  description: Detects Datadog API keys
+spec:
+  pattern: '(?i)(datadog.*apiKey|DD_API_KEY)\s*[:=]\s*["'']?([a-f0-9]{32})["'']?'
+---
+kind: RegexRule
+metadata:
+  id: datadog-app-key
+  name: Datadog Application Key
+  category: cloud
+  severity: HIGH
+  description: Detects Datadog Application keys
+spec:
+  pattern: '(?i)(datadog.*applicationKey|DD_APP_KEY)\s*[:=]\s*["'']?([a-f0-9]{40})["'']?'

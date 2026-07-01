@@ -1,0 +1,108 @@
+# HeapDump Analyzer - ISpider ServiceLoader registry
+# One fully-qualified class name per line. Order is preserved by SpiderRegistry.
+# Database
+cn.wanghw.spider.DataSource01
+cn.wanghw.spider.DataSource02
+cn.wanghw.spider.DataSource03
+cn.wanghw.spider.DataSource04
+cn.wanghw.spider.DataSource05
+cn.wanghw.spider.HikariCPDetail
+cn.wanghw.spider.ClickHouseConfig
+cn.wanghw.spider.HBaseConfig
+cn.wanghw.spider.MyBatisConfig
+cn.wanghw.spider.Neo4jConfig
+cn.wanghw.spider.InfluxDBConfig
+# Cache
+cn.wanghw.spider.Redis01
+cn.wanghw.spider.Redis02
+cn.wanghw.spider.MemcachedConfig
+# Auth
+cn.wanghw.spider.ShiroKey01
+cn.wanghw.spider.ShiroKeyEnhanced
+cn.wanghw.spider.JwtKeyEnhanced
+cn.wanghw.spider.CookieThief
+cn.wanghw.spider.AuthThief
+cn.wanghw.spider.TokenSearch
+cn.wanghw.spider.SessionSearch
+cn.wanghw.spider.AuthTokenSearch
+cn.wanghw.spider.SpringSecurityConfig
+cn.wanghw.spider.OAuth2ClientConfig
+cn.wanghw.spider.CASConfig
+cn.wanghw.spider.Pac4jConfig
+cn.wanghw.spider.SATokenConfig
+cn.wanghw.spider.WebSecurityFilterConfig
+# Cloud
+cn.wanghw.spider.AWSCredentialSearch
+cn.wanghw.spider.AliyunCredentialSearch
+cn.wanghw.spider.GCPCredentialSearch
+cn.wanghw.spider.AzureCredentialSearch
+cn.wanghw.spider.HuaweiCloudCredentialSearch
+cn.wanghw.spider.TencentCloudCredentialSearch
+cn.wanghw.spider.DockerRegistrySearch
+cn.wanghw.spider.K8sServiceAccountSearch
+# Config
+cn.wanghw.spider.PropertySource01
+cn.wanghw.spider.PropertySource02
+cn.wanghw.spider.PropertySource03
+cn.wanghw.spider.PropertySource04
+cn.wanghw.spider.PropertySource05
+cn.wanghw.spider.EnvProperty01
+cn.wanghw.spider.OSS01
+# MQ
+cn.wanghw.spider.KafkaConfig
+cn.wanghw.spider.RabbitMQConfig
+cn.wanghw.spider.RocketMQConfig
+cn.wanghw.spider.PulsarConfig
+cn.wanghw.spider.ActiveMQConfig
+cn.wanghw.spider.SpringCloudStreamConfig
+# Registry
+cn.wanghw.spider.NacosConfig
+cn.wanghw.spider.ZooKeeperConfig
+cn.wanghw.spider.DubboConfig
+cn.wanghw.spider.SpringCloudConfig
+cn.wanghw.spider.ApolloConfig
+# Framework
+cn.wanghw.spider.SpringActuator
+cn.wanghw.spider.RuoYiConfig
+cn.wanghw.spider.FeignClientConfig
+cn.wanghw.spider.DeserializeChain
+cn.wanghw.spider.SpringCloudGatewayConfig
+cn.wanghw.spider.SpringCloudOpenFeignConfig
+cn.wanghw.spider.SpringCloudSentinelConfig
+cn.wanghw.spider.SeataConfig
+cn.wanghw.spider.JeecgBootConfig
+cn.wanghw.spider.SpringBladeConfig
+cn.wanghw.spider.EladminConfig
+cn.wanghw.spider.PigMicroserviceConfig
+cn.wanghw.spider.HuToolConfig
+# HTTP
+cn.wanghw.spider.OkHttpInterceptorSearch
+cn.wanghw.spider.ApacheHttpClientCredential
+cn.wanghw.spider.RestTemplateInterceptorSearch
+cn.wanghw.spider.WebViewCookieSearch
+# International Cloud & Auth (v3.1)
+cn.wanghw.spider.GoogleServiceAccountSearch
+cn.wanghw.spider.GoogleOAuth2Search
+cn.wanghw.spider.FirebaseConfigSearch
+cn.wanghw.spider.Auth0ConfigSearch
+cn.wanghw.spider.OktaConfigSearch
+cn.wanghw.spider.TwilioConfigSearch
+cn.wanghw.spider.SendGridConfigSearch
+cn.wanghw.spider.StripeConfigSearch
+cn.wanghw.spider.PayPalConfigSearch
+cn.wanghw.spider.ShopifyConfigSearch
+cn.wanghw.spider.VaultConfigSearch
+cn.wanghw.spider.DatadogConfigSearch
+cn.wanghw.spider.NewRelicConfigSearch
+cn.wanghw.spider.SplunkConfigSearch
+cn.wanghw.spider.SlackConfigSearch
+cn.wanghw.spider.ElasticsearchConfigSearch
+cn.wanghw.spider.CouchbaseConfigSearch
+# Deep Scan (v3.1)
+cn.wanghw.spider.DependencyVersionSearch
+cn.wanghw.spider.HttpSessionSearch
+cn.wanghw.spider.HttpRequestSearch
+cn.wanghw.spider.ClassLoaderSearch
+cn.wanghw.spider.URLSearch
+# Credential
+cn.wanghw.spider.UserPassSearcher01

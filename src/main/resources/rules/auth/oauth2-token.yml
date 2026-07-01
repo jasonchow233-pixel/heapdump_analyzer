@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: oauth2-access-token
+  name: OAuth2 Access Token (JSON)
+  category: auth
+  severity: CRITICAL
+  description: Detect OAuth2 access tokens in JSON format
+spec:
+  pattern: "\"access_token\"\\s*:\\s*\"([^\"]+)\""

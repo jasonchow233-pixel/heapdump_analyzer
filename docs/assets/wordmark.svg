@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200" role="img" aria-label="HeapDump Analyzer — Dig secrets out of JVM memory">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e1e2e"/>
+      <stop offset="1" stop-color="#11111b"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#89b4fa"/>
+      <stop offset="1" stop-color="#b4befe"/>
+    </linearGradient>
+    <linearGradient id="secret" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9e2af"/>
+      <stop offset="1" stop-color="#fab387"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#cdd6f4"/>
+      <stop offset="1" stop-color="#89b4fa"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="720" height="200" fill="url(#bg)" rx="24"/>
+
+  <!-- Icon mark -->
+  <g transform="translate(36,40)">
+    <g opacity="0.55" stroke="#45475a" stroke-width="2.4" fill="#313244">
+      <rect x="6"   y="8"  width="34" height="34" rx="6"/>
+      <rect x="46"  y="8"  width="34" height="34" rx="6"/>
+      <rect x="86"  y="8"  width="34" height="34" rx="6"/>
+      <rect x="6"   y="48" width="34" height="34" rx="6"/>
+      <rect x="86"  y="48" width="34" height="34" rx="6"/>
+      <rect x="6"   y="88" width="34" height="34" rx="6"/>
+      <rect x="46"  y="88" width="34" height="34" rx="6"/>
+      <rect x="86"  y="88" width="34" height="34" rx="6"/>
+    </g>
+    <g filter="url(#glow)">
+      <rect x="46" y="48" width="34" height="34" rx="8" fill="url(#secret)"/>
+      <g stroke="#1e1e2e" stroke-width="2.8" fill="none" stroke-linecap="round">
+        <circle cx="57.5" cy="65" r="4.5" fill="#1e1e2e"/>
+        <path d="M62 65 L74 65"/>
+        <path d="M70 65 L70 70"/>
+      </g>
+    </g>
+    <g>
+      <circle cx="76" cy="76" r="40" fill="none" stroke="url(#glass)" stroke-width="8.5"/>
+      <circle cx="76" cy="76" r="40" fill="#89b4fa" opacity="0.10"/>
+      <line x1="105" y1="105" x2="127" y2="127" stroke="url(#glass)" stroke-width="11" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="220" y="100" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="52" font-weight="700" fill="url(#title)">HeapDump Analyzer</text>
+  <text x="222" y="138" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="400" fill="#a6adc8" font-style="italic">Dig secrets out of JVM memory.</text>
+</svg>

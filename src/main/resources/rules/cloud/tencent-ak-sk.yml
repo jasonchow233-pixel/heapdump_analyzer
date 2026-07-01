@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: tencent-cloud-ak
+  name: Tencent Cloud SecretId
+  category: cloud
+  severity: CRITICAL
+  description: Detect Tencent Cloud SecretId (AKID prefix)
+spec:
+  pattern: "AKID[A-Za-z0-9]{32}"

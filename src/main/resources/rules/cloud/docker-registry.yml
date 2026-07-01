@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: docker-ecr-url
+  name: AWS ECR Docker Registry URL
+  category: cloud
+  severity: HIGH
+  description: Detect AWS ECR Docker registry URLs
+spec:
+  pattern: "https://[a-z0-9]+\\.dkr\\.ecr\\.[a-z0-9-]+\\.amazonaws\\.com"

@@ -1,0 +1,14 @@
+kind: ClassRule
+metadata:
+  id: spring-datasource-props
+  name: Spring DataSource Properties
+  category: database
+  severity: CRITICAL
+  description: Extract Spring Boot DataSource credentials from heap instances
+spec:
+  className: "org.springframework.boot.autoconfigure.jdbc.DataSourceProperties"
+  fields:
+    - url
+    - username
+    - password
+    - driverClassName

@@ -1,0 +1,10 @@
+kind: RegexRule
+metadata:
+  id: stripe-api-key
+  name: Stripe API Key
+  category: auth
+  severity: CRITICAL
+  description: Detect Stripe live/test API keys
+spec:
+  pattern: "(?:sk|pk)_(?:test|live)_[A-Za-z0-9]{24,}"
+  validator: StripeKeyValidator

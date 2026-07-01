@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: private-key-block
+  name: Private Key (PEM)
+  category: auth
+  severity: CRITICAL
+  description: Detect PEM-encoded private keys in heap string pool
+spec:
+  pattern: "-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"

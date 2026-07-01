@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="HeapDump Analyzer logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e1e2e"/>
+      <stop offset="1" stop-color="#11111b"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#89b4fa"/>
+      <stop offset="1" stop-color="#b4befe"/>
+    </linearGradient>
+    <linearGradient id="secret" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9e2af"/>
+      <stop offset="1" stop-color="#fab387"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded background -->
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="url(#bg)"/>
+
+  <!-- Heap memory grid (background motif) -->
+  <g opacity="0.55" stroke="#45475a" stroke-width="3" fill="#313244">
+    <rect x="40"  y="44"  width="44" height="44" rx="8"/>
+    <rect x="92"  y="44"  width="44" height="44" rx="8"/>
+    <rect x="144" y="44"  width="44" height="44" rx="8"/>
+    <rect x="40"  y="96"  width="44" height="44" rx="8"/>
+    <rect x="144" y="96"  width="44" height="44" rx="8"/>
+    <rect x="40"  y="148" width="44" height="44" rx="8"/>
+    <rect x="92"  y="148" width="44" height="44" rx="8"/>
+    <rect x="144" y="148" width="44" height="44" rx="8"/>
+  </g>
+
+  <!-- The secret cell (highlighted, with a key) -->
+  <g filter="url(#glow)">
+    <rect x="92" y="96" width="44" height="44" rx="10" fill="url(#secret)"/>
+    <!-- key icon inside the glowing cell -->
+    <g stroke="#1e1e2e" stroke-width="3.5" fill="none" stroke-linecap="round">
+      <circle cx="107" cy="118" r="6" fill="#1e1e2e"/>
+      <path d="M113 118 L129 118"/>
+      <path d="M124 118 L124 124"/>
+      <path d="M129 118 L129 123"/>
+    </g>
+  </g>
+
+  <!-- Magnifying glass (foreground) -->
+  <g>
+    <circle cx="150" cy="150" r="52" fill="none" stroke="url(#glass)" stroke-width="11"/>
+    <circle cx="150" cy="150" r="52" fill="#89b4fa" opacity="0.10"/>
+    <line x1="188" y1="188" x2="216" y2="216" stroke="url(#glass)" stroke-width="14" stroke-linecap="round"/>
+  </g>
+</svg>

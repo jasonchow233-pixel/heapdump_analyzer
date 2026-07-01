@@ -1,0 +1,53 @@
+# HeapDump Analyzer Rule Index
+# Each line is a path relative to rules/ directory
+# Total: 42 rules (18 cloud + 14 auth + 4 database + 6 general)
+
+# Cloud (18)
+cloud/aws-access-key.yml
+cloud/aws-secret-key.yml
+cloud/aliyun-ak-sk.yml
+cloud/gcp-service-account.yml
+cloud/google-service-account.yml
+cloud/azure-connection-string.yml
+cloud/azure-storage-key.yml
+cloud/huawei-ak-sk.yml
+cloud/tencent-ak-sk.yml
+cloud/docker-registry.yml
+cloud/k8s-service-account.yml
+cloud/firebase-config.yml
+cloud/datadog-key.yml
+cloud/newrelic-key.yml
+cloud/paypal-credential.yml
+cloud/shopify-token.yml
+cloud/splunk-token.yml
+cloud/twilio-credential.yml
+
+# Auth (14)
+auth/jwt-token.yml
+auth/bearer-token.yml
+auth/oauth2-token.yml
+auth/github-token.yml
+auth/gitlab-token.yml
+auth/slack-token.yml
+auth/stripe-key.yml
+auth/private-key.yml
+auth/telegram-bot-token.yml
+auth/sendgrid-api-key.yml
+auth/auth0-credential.yml
+auth/google-oauth2.yml
+auth/okta-credential.yml
+auth/vault-token.yml
+
+# Database (4)
+database/spring-datasource.yml
+database/hikaricp-detail.yml
+database/clickhouse.yml
+database/neo4j.yml
+
+# General (6)
+general/jdbc-connection.yml
+general/generic-api-key.yml
+general/smtp-credential.yml
+general/mongodb-connection.yml
+general/amqp-connection.yml
+general/mysql-password.yml

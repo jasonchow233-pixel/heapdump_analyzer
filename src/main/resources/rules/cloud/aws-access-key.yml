@@ -1,0 +1,10 @@
+kind: RegexRule
+metadata:
+  id: aws-access-key-id
+  name: AWS Access Key ID
+  category: cloud
+  severity: CRITICAL
+  description: Detect AWS Access Key IDs (AKIA prefix) in heap string pool
+spec:
+  pattern: "AKIA[0-9A-Z]{16}"
+  validator: AwsKeyValidator

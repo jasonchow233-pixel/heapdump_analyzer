@@ -1,0 +1,10 @@
+kind: RegexRule
+metadata:
+  id: github-token
+  name: GitHub Personal Access Token
+  category: auth
+  severity: CRITICAL
+  description: Detect GitHub personal access tokens (ghp_/gho_/ghu_/ghs_ prefixes)
+spec:
+  pattern: "gh[psou]_[A-Za-z0-9_]{36,255}"
+  validator: GitHubTokenValidator

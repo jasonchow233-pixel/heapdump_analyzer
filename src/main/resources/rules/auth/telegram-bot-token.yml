@@ -1,0 +1,10 @@
+kind: RegexRule
+metadata:
+  id: telegram-bot-token
+  name: Telegram Bot Token
+  category: auth
+  severity: CRITICAL
+  description: Detect Telegram Bot API tokens
+spec:
+  pattern: "[0-9]{8,10}:[A-Za-z0-9_\\-]{35}"
+  validator: TelegramBotValidator

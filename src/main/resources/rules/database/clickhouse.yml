@@ -1,0 +1,16 @@
+kind: ClassRule
+metadata:
+  id: clickhouse-props
+  name: ClickHouse Properties
+  category: database
+  severity: CRITICAL
+  description: Extract ClickHouse JDBC connection properties
+spec:
+  className: "com.clickhouse.jdbc.ClickHouseProperties"
+  alternateClassNames:
+    - "com.github.housepower.jdbc.settings.ClickHouseProperties"
+  fields:
+    - url
+    - user
+    - password
+    - database

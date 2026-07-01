@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: jwt-token
+  name: JWT Token
+  category: auth
+  severity: CRITICAL
+  description: Detect JSON Web Tokens (eyJ header) in heap string pool
+spec:
+  pattern: "eyJ[A-Za-z0-9_-]+\\.eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"

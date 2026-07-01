@@ -1,0 +1,11 @@
+kind: ClassRule
+metadata:
+  id: neo4j-driver
+  name: Neo4j Driver
+  category: database
+  severity: HIGH
+  description: Extract Neo4j driver connection details
+spec:
+  className: "org.neo4j.driver.internal.InternalDriver"
+  alternateClassNames:
+    - "org.neo4j.driver.internal.DirectDriver"

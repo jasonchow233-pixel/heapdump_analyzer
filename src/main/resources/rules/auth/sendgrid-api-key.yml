@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: sendgrid-api-key
+  name: SendGrid API Key
+  category: auth
+  severity: CRITICAL
+  description: Detect SendGrid API keys (SG. prefix)
+spec:
+  pattern: "SG\\.[A-Za-z0-9_\\-]{22}\\.[A-Za-z0-9_\\-]{43}"

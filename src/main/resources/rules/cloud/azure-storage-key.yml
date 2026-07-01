@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: azure-storage-connection-string
+  name: Azure Storage Account Key
+  category: cloud
+  severity: CRITICAL
+  description: Detect Azure Storage account connection strings with account keys
+spec:
+  pattern: "DefaultEndpointsProtocol=https?;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{40,}"

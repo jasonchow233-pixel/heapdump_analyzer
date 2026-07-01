@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: amqp-connection-string
+  name: AMQP/RabbitMQ Connection String
+  category: mq
+  severity: HIGH
+  description: Detect AMQP connection strings with credentials
+spec:
+  pattern: "amqp://[^\\s:]+:[^\\s@]+@[A-Za-z0-9._\\-]+(:[0-9]+)?"

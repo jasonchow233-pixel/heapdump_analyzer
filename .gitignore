@@ -1,0 +1,24 @@
+# Build
+target/
+dependency-reduced-pom.xml
+
+# Test data & cache
+test_heapdump
+test_heapdump.*
+*.hwcache/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Scan outputs
+analysis_result.txt
+result.txt
+jdspider.txt
+/target/

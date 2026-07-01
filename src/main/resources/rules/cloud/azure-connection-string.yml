@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: azure-connection-string
+  name: Azure Service Bus Connection String
+  category: cloud
+  severity: CRITICAL
+  description: Detect Azure Service Bus connection strings with shared access keys
+spec:
+  pattern: "Endpoint=sb://[^;]+;SharedAccessKeyName=[^;]+;SharedAccessKey=[^;]+"

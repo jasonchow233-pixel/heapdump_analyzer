@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: aliyun-access-key
+  name: Aliyun AccessKey ID
+  category: cloud
+  severity: CRITICAL
+  description: Detect Aliyun/Alibaba Cloud AccessKey IDs (LTAI prefix)
+spec:
+  pattern: "LTAI[A-Za-z0-9]{12,20}"

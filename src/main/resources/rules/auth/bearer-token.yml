@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: bearer-token
+  name: Bearer Token
+  category: auth
+  severity: HIGH
+  description: Detect Bearer authentication tokens in HTTP headers
+spec:
+  pattern: "(?i)bearer\\s+[A-Za-z0-9_\\-.~+/]+=*"

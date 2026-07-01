@@ -1,0 +1,30 @@
+---
+kind: RegexRule
+metadata:
+  id: vault-token-bare
+  name: Vault Token (bare)
+  category: auth
+  severity: CRITICAL
+  description: Detects Vault tokens (hvs. or s. prefix)
+spec:
+  pattern: '(?:hvs\.[a-zA-Z0-9_-]{24,}|s\.[a-zA-Z0-9]{24})'
+---
+kind: RegexRule
+metadata:
+  id: vault-token-assignment
+  name: Vault Token (assignment)
+  category: auth
+  severity: CRITICAL
+  description: Detects Vault tokens in assignments
+spec:
+  pattern: '(?i)(vault.*token)\s*[:=]\s*["'']?(hvs\.[a-zA-Z0-9_-]+|s\.[a-zA-Z0-9]+)["'']?'
+---
+kind: RegexRule
+metadata:
+  id: vault-role-id
+  name: Vault Role ID
+  category: auth
+  severity: CRITICAL
+  description: Detects Vault role IDs
+spec:
+  pattern: '(?i)(roleId|role_id)\s*[:=]\s*["'']?([a-f0-9-]{36})["'']?'
