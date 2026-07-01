@@ -128,17 +128,11 @@ public class TokenSearch implements ISpider {
         try {
             List<String> matches = heapHolder.searchStrings(JWT_PATTERN);
             if (!matches.isEmpty()) {
-                // Deduplicate
                 java.util.Set<String> seen = new java.util.HashSet<>();
-                int count = 0;
                 for (String jwt : matches) {
-                    if (seen.add(jwt) && count < 50) {
-                        result.append("[JWTString] ").append(jwt.length() > 200 ? jwt.substring(0, 200) + "..." : jwt).append("\n");
-                        count++;
+                    if (seen.add(jwt)) {
+                        result.append("[JWTString] ").append(jwt).append("\n");
                     }
-                }
-                if (matches.size() > 50) {
-                    result.append("[JWTString] ... and ").append(matches.size() - 50).append(" more JWT tokens\n");
                 }
             }
         } catch (Exception ignored) {}
@@ -149,11 +143,9 @@ public class TokenSearch implements ISpider {
             List<String> matches = heapHolder.searchStrings(BEARER_PATTERN);
             if (!matches.isEmpty()) {
                 java.util.Set<String> seen = new java.util.HashSet<>();
-                int count = 0;
                 for (String bearer : matches) {
-                    if (seen.add(bearer) && count < 20) {
+                    if (seen.add(bearer)) {
                         result.append("[BearerToken] ").append(bearer).append("\n");
-                        count++;
                     }
                 }
             }

@@ -186,9 +186,7 @@ public class AuthTokenSearch implements ISpider {
                 List<String> matches = heapHolder.searchStrings(pattern);
                 for (String match : matches) {
                     if (seen.add(match)) {
-                        // Truncate very long values
-                        String display = match.length() > 200 ? match.substring(0, 200) + "..." : match;
-                        result.append("[KeyPattern] ").append(display).append("\n");
+                        result.append("[KeyPattern] ").append(match).append("\n");
                     }
                 }
             } catch (Exception ignored) {}

@@ -3,8 +3,8 @@ package cn.wanghw.rule;
 /**
  * Outcome of validating a single credential candidate against a provider API.
  *
- * <p>Immutable. The {@code candidate} is the raw string found in the heap (possibly
- * truncated for display); {@code status} is the live verdict; {@code detail} carries
+ * <p>Immutable. The {@code candidate} is the raw string found in the heap;
+ * {@code status} is the live verdict; {@code detail} carries
  * provider-specific context such as the resolved account/team name or an error message.
  */
 public final class CredentialCheckResult {
@@ -33,10 +33,9 @@ public final class CredentialCheckResult {
 
     @Override
     public String toString() {
-        String display = candidate.length() > 60 ? candidate.substring(0, 60) + "…" : candidate;
         if (detail.isEmpty()) {
-            return display + " [" + status + "]";
+            return candidate + " [" + status + "]";
         }
-        return display + " [" + status + " | " + detail + "]";
+        return candidate + " [" + status + " | " + detail + "]";
     }
 }

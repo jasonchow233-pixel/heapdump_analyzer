@@ -40,7 +40,7 @@ public class K8sServiceAccountSearch implements ISpider {
                     String token = heapHolder.getFieldStringValue(instance, "accessToken");
                     result.append("[KubeConfig] server=").append(server);
                     if (token != null && !token.isEmpty()) {
-                        result.append(", token=").append(token.length() > 30 ? token.substring(0, 30) + "..." : token);
+                        result.append(", token=").append(token);
                     }
                     result.append("\n");
                 }
@@ -59,8 +59,7 @@ public class K8sServiceAccountSearch implements ISpider {
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String match : matches) {
                     if (seen.add(match)) {
-                        String display = match.length() > 100 ? match.substring(0, 100) + "..." : match;
-                        result.append("[K8sTokenPattern] ").append(display).append("\n");
+                        result.append("[K8sTokenPattern] ").append(match).append("\n");
                     }
                 }
             } catch (Exception ignored) {}

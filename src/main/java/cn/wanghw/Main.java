@@ -91,6 +91,9 @@ public class Main implements Callable<Integer> {
     private final List<ISpider> allSpiders = SpiderRegistry.getInstance().getSpiders();
 
     public static void main(String[] args) {
+        if (args == null || args.length == 0) {
+            args = new String[]{"--desktop"};
+        }
         int exitCode = new CommandLine(new Main()).execute(args);
         System.exit(exitCode);
     }

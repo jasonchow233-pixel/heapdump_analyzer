@@ -53,8 +53,7 @@ public class AzureCredentialSearch implements ISpider {
                     List<String> matches = heapHolder.searchStrings(pattern);
                     for (String match : matches) {
                         if (seen.add(match)) {
-                            String display = match.length() > 200 ? match.substring(0, 200) + "..." : match;
-                            result.append("[AzureConnectionString] ").append(display).append("\n");
+                            result.append("[AzureConnectionString] ").append(match).append("\n");
                         }
                     }
                 } catch (Exception ignored) {}

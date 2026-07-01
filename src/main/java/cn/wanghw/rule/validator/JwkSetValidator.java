@@ -30,8 +30,8 @@ public class JwkSetValidator implements Validator {
                 String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]));
                 // Check expiry
                 String status = checkExpiry(payloadJson);
-                valid.add(token + " [JWT_HEADER: " + truncate(headerJson, 80)
-                        + " | PAYLOAD: " + truncate(payloadJson, 200) + " | " + status + "]");
+                valid.add(token + " [JWT_HEADER: " + headerJson
+                        + " | PAYLOAD: " + payloadJson + " | " + status + "]");
             } catch (Exception e) {
                 valid.add(token + " [INVALID: decode failed - " + e.getMessage() + "]");
             }
@@ -59,9 +59,5 @@ public class JwkSetValidator implements Validator {
         } catch (Exception e) {
             return "EXPIRY_CHECK_FAILED";
         }
-    }
-
-    private String truncate(String s, int maxLen) {
-        return s.length() > maxLen ? s.substring(0, maxLen) + "..." : s;
     }
 }

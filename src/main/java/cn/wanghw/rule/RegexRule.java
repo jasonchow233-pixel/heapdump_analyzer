@@ -33,11 +33,7 @@ public class RegexRule implements Rule {
     public RuleResult execute(IHeapHolder heapHolder) {
         try {
             List<String> matches = heapHolder.searchStrings(pattern);
-            Set<String> unique = new HashSet<>();
-            for (String match : matches) {
-                String display = match.length() > 300 ? match.substring(0, 300) + "..." : match;
-                unique.add(display);
-            }
+            Set<String> unique = new HashSet<>(matches);
             return new RuleResult(this, List.copyOf(unique));
         } catch (Exception e) {
             return RuleResult.empty(this);
