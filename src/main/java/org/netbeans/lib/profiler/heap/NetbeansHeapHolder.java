@@ -277,18 +277,61 @@ public class NetbeansHeapHolder implements IHeapHolder {
 
     // Enhanced methods for v2.0
 
+    private static final int MIN_ARRAY_LENGTH = 10;
+    private static final int MAX_ARRAY_LENGTH = 10000;
+
     @Override
     public List<String> searchStrings(Pattern pattern) {
+        return searchAllTexts(pattern);
+    }
+
+    @Override
+    public List<String> searchAllTexts(Pattern pattern) {
         List<String> results = new ArrayList<>();
+        HashSet<String> seen = new HashSet<>();
+
+        // Phase 1: scan java.lang.String instances
         Object stringClass = findClass("java.lang.String");
-        if (stringClass == null) return results;
-        for (Object inst : getInstances(stringClass)) {
-            String str = toString(inst);
-            if (str != null && pattern.matcher(str).find()) {
-                results.add(str);
+        if (stringClass != null) {
+            for (Object inst : getInstances(stringClass)) {
+                if (cancelled.get()) return results;
+                String str = toString(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
             }
-            if (cancelled.get()) break;
         }
+
+        // Phase 2: scan byte[] instances
+        Object byteArrayClass = findClass("byte[]");
+        if (byteArrayClass != null) {
+            for (Object inst : getInstances(byteArrayClass)) {
+                if (cancelled.get()) return results;
+                if (!(inst instanceof PrimitiveArrayInstance)) continue;
+                int length = ((PrimitiveArrayInstance) inst).getLength();
+                if (length < MIN_ARRAY_LENGTH || length > MAX_ARRAY_LENGTH) continue;
+                String str = toString(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
+            }
+        }
+
+        // Phase 3: scan char[] instances
+        Object charArrayClass = findClass("char[]");
+        if (charArrayClass != null) {
+            for (Object inst : getInstances(charArrayClass)) {
+                if (cancelled.get()) return results;
+                if (!(inst instanceof PrimitiveArrayInstance)) continue;
+                int length = ((PrimitiveArrayInstance) inst).getLength();
+                if (length < MIN_ARRAY_LENGTH || length > MAX_ARRAY_LENGTH) continue;
+                String str = toString(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
+            }
+        }
+
         return results;
     }
 

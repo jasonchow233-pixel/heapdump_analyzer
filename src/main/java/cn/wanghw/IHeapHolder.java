@@ -57,6 +57,8 @@ public interface IHeapHolder {
     // Enhanced methods for v2.0
     List<String> searchStrings(Pattern pattern);
 
+    List<String> searchAllTexts(Pattern pattern);
+
     List<Object> findClassesByPattern(String pattern);
 
     HashMap<String, String> getAllFieldValues(Object instance);
