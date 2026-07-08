@@ -57,7 +57,7 @@ public class AliyunCredentialSearch implements ISpider {
             }
             // String pool LTAI pattern
             try {
-                List<String> matches = heapHolder.searchStrings(ALIYUN_AK_PATTERN);
+                List<String> matches = heapHolder.searchAll(ALIYUN_AK_PATTERN);
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String match : matches) {
                     if (seen.add(match)) {

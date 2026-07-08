@@ -183,7 +183,7 @@ public class AuthTokenSearch implements ISpider {
         java.util.Set<String> seen = new java.util.HashSet<>();
         for (Pattern pattern : KEY_PATTERNS) {
             try {
-                List<String> matches = heapHolder.searchStrings(pattern);
+                List<String> matches = heapHolder.searchAll(pattern);
                 for (String match : matches) {
                     if (seen.add(match)) {
                         result.append("[KeyPattern] ").append(match).append("\n");

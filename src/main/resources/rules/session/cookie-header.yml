@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: cookie-header
+  name: Cookie Header
+  category: session
+  severity: HIGH
+  description: 检测完整Cookie字符串格式（多键值对）
+spec:
+  pattern: "[A-Za-z0-9_-]+=[^;\\s]+(;[A-Za-z0-9_-]+=[^;\\s]+)*"
+  useRawMemory: false
+  minLength: 10
+  maxLength: 1000
+  contextKeywords:
+    - "cookie"
+    - "Cookie"
+    - "set-cookie"
+    - "饼干"

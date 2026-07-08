@@ -126,7 +126,7 @@ public class TokenSearch implements ISpider {
 
     private void sniffJwtStrings(IHeapHolder heapHolder, StringBuilder result) {
         try {
-            List<String> matches = heapHolder.searchStrings(JWT_PATTERN);
+            List<String> matches = heapHolder.searchAll(JWT_PATTERN);
             if (!matches.isEmpty()) {
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String jwt : matches) {
@@ -140,7 +140,7 @@ public class TokenSearch implements ISpider {
 
     private void sniffBearerStrings(IHeapHolder heapHolder, StringBuilder result) {
         try {
-            List<String> matches = heapHolder.searchStrings(BEARER_PATTERN);
+            List<String> matches = heapHolder.searchAll(BEARER_PATTERN);
             if (!matches.isEmpty()) {
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String bearer : matches) {

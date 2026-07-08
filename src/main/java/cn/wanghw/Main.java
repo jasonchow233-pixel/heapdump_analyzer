@@ -46,11 +46,17 @@ public class Main implements Callable<Integer> {
     @Option(names = {"-e", "--extract"}, description = "Extract all strings matching regex pattern")
     private String extractPattern;
 
+    @Option(names = {"--extract-raw"}, description = "Extract strings from raw memory (like 'strings' command) matching regex pattern")
+    private String extractRawPattern;
+
     @Option(names = {"--severity"}, description = "Minimum severity level: CRITICAL, HIGH, MEDIUM, LOW, INFO", defaultValue = "INFO")
     private String minSeverity;
 
-    @Option(names = {"--gui"}, description = "Launch GUI mode")
-    private boolean guiMode;
+    @Option(names = {"--category"}, description = "Filter by category: credential, pii, session, network, log, database, cloud, config", defaultValue = "")
+    private String categoryFilter;
+
+    @Option(names = {"--enhanced"}, description = "Enable enhanced result output format with full details")
+    private boolean enhancedOutput;
 
     @Option(names = {"--rules"}, description = "Enable rule engine with custom rules directory (default: built-in rules)")
     private String rulesDir = "";
@@ -76,8 +82,8 @@ public class Main implements Callable<Integer> {
     @Option(names = {"--threads"}, description = "Number of threads for parallel scan (default: CPU cores)", defaultValue = "0")
     private int threadCount;
 
-    @Option(names = {"--desktop"}, description = "Launch JavaFX Desktop GUI mode")
-    private boolean desktopMode;
+    @Option(names = {"--swing"}, description = "Launch modern Swing GUI (FlatLaf theme) (default)")
+    private boolean swingMode;
 
     @Option(names = {"--web"}, description = "Launch the Web UI server (browser dashboard)")
     private boolean webMode;
@@ -92,7 +98,8 @@ public class Main implements Callable<Integer> {
 
     public static void main(String[] args) {
         if (args == null || args.length == 0) {
-            args = new String[]{"--desktop"};
+            // 默认启动新的Swing GUI
+            args = new String[]{"--swing"};
         }
         int exitCode = new CommandLine(new Main()).execute(args);
         System.exit(exitCode);
@@ -110,11 +117,19 @@ public class Main implements Callable<Integer> {
             return 0;
         }
 
-        if (guiMode || desktopMode) {
+        if (swingMode) {
+            // 现代化Swing GUI (FlatLaf)
             String[] guiArgs = (heapFile != null && heapFile.exists())
                     ? new String[]{heapFile.getAbsolutePath()}
                     : new String[0];
-            com.heapdump.analyzer.ui.HeapDumpGUI.launchGUI(guiArgs);
+            com.heapdump.analyzer.ui.swing.HeapDumpAnalyzerGUI.launchGUI(guiArgs);
+            
+            // Swing GUI在单独线程运行，主线程需要保持运行以防止程序退出
+            try {
+                Thread.currentThread().join(); // 保持主线程运行
+            } catch (InterruptedException e) {
+                // GUI关闭时会中断主线程
+            }
             return 0;
         }
 
@@ -161,6 +176,10 @@ public class Main implements Callable<Integer> {
             return extractStrings(heapHolder, out);
         }
 
+        if (extractRawPattern != null) {
+            return extractRawStrings(heapHolder, out);
+        }
+
         Severity minSev = Severity.valueOf(minSeverity.toUpperCase());
 
         if (validateLiveEnabled) {
@@ -185,6 +204,15 @@ public class Main implements Callable<Integer> {
     /** Run a single scan and assemble a {@link ScanReport}. Shared by CLI, Web UI and batch. */
     public ScanReport scan(File file, IHeapHolder heapHolder, Severity minSev) {
         List<ISpider> spiders = rulesOnly ? java.util.Collections.emptyList() : resolveSpiders();
+
+        // 应用分类过滤
+        if (categoryFilter != null && !categoryFilter.isEmpty()) {
+            SensitivityCategory targetCategory = SensitivityCategory.fromString(categoryFilter);
+            spiders = spiders.stream()
+                .filter(s -> SensitivityCategory.fromString(s.getCategory()) == targetCategory)
+                .collect(java.util.stream.Collectors.toList());
+        }
+
         java.util.Map<String, String> spiderData = executeSpiders(spiders, heapHolder, minSev);
 
         List<ScanReport.SpiderEntry> spiderEntries = new ArrayList<>();
@@ -205,6 +233,12 @@ public class Main implements Callable<Integer> {
             engine.setValidateLiveEnabled(validateLiveEnabled);
             engine.setParallelEnabled(parallelMode);
             engine.setThreadCount(threadCount);
+
+            // 应用分类过滤到RuleEngine
+            if (categoryFilter != null && !categoryFilter.isEmpty()) {
+                engine.setCategoryFilter(categoryFilter);
+            }
+
             List<RuleResult> ruleResults = engine.execute(heapHolder);
             for (RuleResult rr : ruleResults) {
                 ruleEntries.add(ScanReport.RuleEntry.from(rr));
@@ -219,11 +253,15 @@ public class Main implements Callable<Integer> {
     }
 
     private void render(ScanReport report, PrintStream out) {
-        switch (format.toLowerCase()) {
-            case "json" -> renderJson(report, out);
-            case "csv" -> renderCsv(report, out);
-            case "html" -> out.println(HtmlReportRenderer.render(report));
-            default -> renderText(report, out);
+        if (enhancedOutput) {
+            renderEnhanced(report, out);
+        } else {
+            switch (format.toLowerCase()) {
+                case "json" -> renderJson(report, out);
+                case "csv" -> renderCsv(report, out);
+                case "html" -> out.println(HtmlReportRenderer.render(report));
+                default -> renderText(report, out);
+            }
         }
     }
 
@@ -262,6 +300,70 @@ public class Main implements Callable<Integer> {
                     for (var c : r.liveResults) out.println("  " + c);
                 }
             }
+        }
+        out.println("===========================================");
+    }
+
+    private void renderEnhanced(ScanReport report, PrintStream out) {
+        out.println("===========================================");
+        out.println("HeapDump Analyzer v" + report.getVersion() + " — Enhanced Output");
+        out.println("File: " + report.getFileName());
+        out.println("Scanned: " + report.getScanTime());
+        out.println("===========================================");
+
+        Map<SensitivityCategory, Integer> catCounts = new EnumMap<>(SensitivityCategory.class);
+        for (SensitivityCategory cat : SensitivityCategory.values()) catCounts.put(cat, 0);
+
+        // 统计分类
+        for (ScanReport.RuleEntry r : report.getHitRules()) {
+            SensitivityCategory cat = SensitivityCategory.fromString(r.category);
+            catCounts.merge(cat, r.matches.size(), Integer::sum);
+        }
+
+        out.println("Category Summary:");
+        for (Map.Entry<SensitivityCategory, Integer> entry : catCounts.entrySet()) {
+            if (entry.getValue() > 0) {
+                out.println("  " + entry.getKey().getDisplayText() + ": " + entry.getValue());
+            }
+        }
+
+        out.println("\n===========================================");
+        out.println("Detailed Results (NO MASKING - Full Values Shown):");
+        out.println("===========================================");
+
+        for (ScanReport.RuleEntry r : report.getHitRules()) {
+            SensitivityCategory cat = SensitivityCategory.fromString(r.category);
+            out.println("\n[" + cat.getIcon() + " " + cat.getName() + "] " + r.name + " [" + r.severity.getLabel() + "]");
+            out.println("Rule ID: " + r.id);
+            out.println("Description: " + r.description);
+
+            if (!r.matches.isEmpty()) {
+                out.println("\nMatched Values (Full - Not Masked):");
+                out.println("─".repeat(80));
+                for (int i = 0; i < r.matches.size(); i++) {
+                    out.println((i + 1) + ". " + r.matches.get(i));
+                }
+            }
+
+            if (!r.validated.isEmpty()) {
+                out.println("\nOffline Validation Results:");
+                out.println("─".repeat(80));
+                for (String v : r.validated) out.println("  ✓ " + v);
+            }
+
+            if (!r.liveResults.isEmpty()) {
+                out.println("\nLive Validation Results:");
+                out.println("─".repeat(80));
+                for (var c : r.liveResults) {
+                    out.println("  " + c.getCandidate() + " -> " + c.getStatus() + " (" + c.getDetail() + ")");
+                }
+            }
+        }
+
+        out.println("\n===========================================");
+        out.println("Total: " + report.getHitRules().size() + " rules matched");
+        if (report.liveCount() > 0) {
+            out.println("[!] " + report.liveCount() + " LIVE credential(s) confirmed online");
         }
         out.println("===========================================");
     }
@@ -446,6 +548,20 @@ public class Main implements Callable<Integer> {
                 out.println(s);
             }
             out.println("\n[+] Found " + matches.size() + " matching strings.");
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 1;
+        }
+        return 0;
+    }
+
+    private int extractRawStrings(IHeapHolder heapHolder, PrintStream out) {
+        try {
+            List<String> matches = heapHolder.searchRawMemory(java.util.regex.Pattern.compile(extractRawPattern));
+            for (String s : matches) {
+                out.println(s);
+            }
+            out.println("\n[+] Found " + matches.size() + " matching strings in raw memory.");
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 1;

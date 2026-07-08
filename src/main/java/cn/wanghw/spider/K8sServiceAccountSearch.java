@@ -55,7 +55,7 @@ public class K8sServiceAccountSearch implements ISpider {
             }
             // String pool K8s token pattern
             try {
-                List<String> matches = heapHolder.searchStrings(K8S_TOKEN_PATTERN);
+                List<String> matches = heapHolder.searchAll(K8S_TOKEN_PATTERN);
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String match : matches) {
                     if (seen.add(match)) {

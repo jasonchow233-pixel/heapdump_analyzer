@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: bank-card
+  name: 银行卡号
+  category: pii
+  severity: HIGH
+  description: 检测16-19位银行卡号码
+spec:
+  pattern: "\\d{16,19}"
+  useRawMemory: false
+  minLength: 16
+  maxLength: 19
+  contextKeywords:
+    - "bank"
+    - "card"
+    - "银行卡"
+    - "卡号"

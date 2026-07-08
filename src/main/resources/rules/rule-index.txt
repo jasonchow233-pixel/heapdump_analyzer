@@ -1,6 +1,6 @@
 # HeapDump Analyzer Rule Index
 # Each line is a path relative to rules/ directory
-# Total: 42 rules (18 cloud + 14 auth + 4 database + 6 general)
+# Total: 56 rules (18 cloud + 15 auth + 4 database + 6 general + 4 pii + 2 session + 5 password + 1 network + 1 log)
 
 # Cloud (18)
 cloud/aws-access-key.yml
@@ -22,7 +22,7 @@ cloud/shopify-token.yml
 cloud/splunk-token.yml
 cloud/twilio-credential.yml
 
-# Auth (14)
+# Auth (15)
 auth/jwt-token.yml
 auth/bearer-token.yml
 auth/oauth2-token.yml
@@ -35,6 +35,7 @@ auth/telegram-bot-token.yml
 auth/sendgrid-api-key.yml
 auth/auth0-credential.yml
 auth/google-oauth2.yml
+auth/google-authcode.yml
 auth/okta-credential.yml
 auth/vault-token.yml
 
@@ -51,3 +52,25 @@ general/smtp-credential.yml
 general/mongodb-connection.yml
 general/amqp-connection.yml
 general/mysql-password.yml
+
+# PII (4)
+pii/phone-cn.yml
+pii/email-address.yml
+pii/id-card-cn.yml
+pii/bank-card.yml
+
+# Session (2)
+session/session-id.yml
+session/cookie-header.yml
+
+# Password (3)
+password/username-password.yml
+password/password-field.yml
+password/bcrypt.yml
+
+# Network (1)
+network/ipv4-address.yml
+network/url-credentials.yml
+
+# Log (1)
+log/sensitive-log.yml

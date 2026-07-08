@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: google-authcode
+  name: Google Authenticator Code
+  category: auth
+  severity: HIGH
+  description: Detect Google Authenticator backup codes or secret keys
+spec:
+  pattern: "(?i)(google[-_]?auth|auth[-_]?code|totp|otp[-_]?secret|backup[-_]?code)[\\s]*[=:][\\s]*[A-Z0-9]{16,}"

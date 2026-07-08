@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: session-id
+  name: Session ID
+  category: session
+  severity: HIGH
+  description: 检测常见Session ID格式（32位十六进制或24位以上字母数字）
+spec:
+  pattern: "[A-Fa-f0-9]{32}|[A-Za-z0-9]{24,}"
+  useRawMemory: false
+  minLength: 24
+  maxLength: 64
+  contextKeywords:
+    - "session"
+    - "JSESSIONID"
+    - "sessionid"
+    - "会话"

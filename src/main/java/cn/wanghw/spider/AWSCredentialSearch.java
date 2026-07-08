@@ -57,7 +57,7 @@ public class AWSCredentialSearch implements ISpider {
             java.util.Set<String> seen = new java.util.HashSet<>();
             for (Pattern pattern : new Pattern[]{AWS_AK_PATTERN, AWS_SECRET_PATTERN}) {
                 try {
-                    List<String> matches = heapHolder.searchStrings(pattern);
+                    List<String> matches = heapHolder.searchAll(pattern);
                     for (String match : matches) {
                         if (seen.add(match)) {
                             result.append("[AWSKeyPattern] ").append(match).append("\n");

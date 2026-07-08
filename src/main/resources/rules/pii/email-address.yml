@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: email-address
+  name: 邮箱地址
+  category: pii
+  severity: HIGH
+  description: 检测标准邮箱地址格式
+spec:
+  pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+  useRawMemory: false
+  minLength: 5
+  maxLength: 100
+  contextKeywords:
+    - "email"
+    - "mail"
+    - "邮箱"
+    - "邮件"

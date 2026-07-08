@@ -48,7 +48,7 @@ public class GCPCredentialSearch implements ISpider {
             }
             // String pool
             try {
-                List<String> matches = heapHolder.searchStrings(GCP_SA_PATTERN);
+                List<String> matches = heapHolder.searchAll(GCP_SA_PATTERN);
                 java.util.Set<String> seen = new java.util.HashSet<>();
                 for (String match : matches) {
                     if (seen.add(match)) {

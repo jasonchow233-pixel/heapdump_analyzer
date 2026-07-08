@@ -16,6 +16,7 @@ public class RegexRule implements Rule {
     private String description;
     private Pattern pattern;
     private Validator validator;
+    private boolean useRawMemory = false;  // 是否使用原始内存扫描
 
     public RegexRule() {}
 
@@ -32,7 +33,7 @@ public class RegexRule implements Rule {
     @Override
     public RuleResult execute(IHeapHolder heapHolder) {
         try {
-            List<String> matches = heapHolder.searchStrings(pattern);
+            List<String> matches = heapHolder.searchAll(pattern);
             Set<String> unique = new HashSet<>(matches);
             return new RuleResult(this, List.copyOf(unique));
         } catch (Exception e) {
@@ -56,4 +57,6 @@ public class RegexRule implements Rule {
     @Override
     public Validator getValidator() { return validator; }
     public void setValidator(Validator validator) { this.validator = validator; }
+    public boolean isUseRawMemory() { return useRawMemory; }
+    public void setUseRawMemory(boolean useRawMemory) { this.useRawMemory = useRawMemory; }
 }

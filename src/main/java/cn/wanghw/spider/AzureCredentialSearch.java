@@ -50,7 +50,7 @@ public class AzureCredentialSearch implements ISpider {
             java.util.Set<String> seen = new java.util.HashSet<>();
             for (Pattern pattern : new Pattern[]{AZURE_CONN_PATTERN, AZURE_STORAGE_PATTERN}) {
                 try {
-                    List<String> matches = heapHolder.searchStrings(pattern);
+                    List<String> matches = heapHolder.searchAll(pattern);
                     for (String match : matches) {
                         if (seen.add(match)) {
                             result.append("[AzureConnectionString] ").append(match).append("\n");

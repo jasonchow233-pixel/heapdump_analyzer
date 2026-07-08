@@ -15,9 +15,11 @@ public class NetbeansHeapHolder implements IHeapHolder {
     final private AtomicBoolean cancelled = new AtomicBoolean(false);
     private Heap _heap;
     private Snapshot snapshot;
+    private File heapFile;  // Store the original heap file for raw memory scanning
     private final java.util.Map<String, JavaClass> classCache = new java.util.concurrent.ConcurrentHashMap<>();
 
     public NetbeansHeapHolder(File heapfile) throws IOException {
+        this.heapFile = heapfile;  // Store file reference
         _heap = HeapFactory.createHeap(heapfile);
         snapshot = new Snapshot(_heap, this);
     }
@@ -332,6 +334,147 @@ public class NetbeansHeapHolder implements IHeapHolder {
             }
         }
 
+        // Phase 4: scan StringBuilder instances
+        Object sbClass = findClass("java.lang.StringBuilder");
+        if (sbClass != null) {
+            for (Object inst : getInstances(sbClass)) {
+                if (cancelled.get()) return results;
+                String str = extractStringBuilder(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
+            }
+        }
+
+        // Phase 5: scan StringBuffer instances
+        Object sbufClass = findClass("java.lang.StringBuffer");
+        if (sbufClass != null) {
+            for (Object inst : getInstances(sbufClass)) {
+                if (cancelled.get()) return results;
+                String str = extractStringBuilder(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
+            }
+        }
+
+        // Phase 6: scan CharBuffer instances
+        Object charBufClass = findClass("java.nio.CharBuffer");
+        if (charBufClass != null) {
+            for (Object inst : getInstances(charBufClass)) {
+                if (cancelled.get()) return results;
+                String str = extractCharBuffer(inst);
+                if (str != null && pattern.matcher(str).find() && seen.add(str)) {
+                    results.add(str);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    private String extractStringBuilder(Object instance) {
+        if (!(instance instanceof Instance)) return null;
+        Instance inst = (Instance) instance;
+        Object valueField = inst.getValueOfField("value");
+        if (valueField instanceof Instance) {
+            return toString(valueField);
+        }
+        return null;
+    }
+
+    private String extractCharBuffer(Object instance) {
+        if (!(instance instanceof Instance)) return null;
+        Instance inst = (Instance) instance;
+        // CharBuffer usually wraps a char[] or has a hb (heap buffer) field
+        Object hb = inst.getValueOfField("hb");
+        if (hb instanceof Instance) {
+            return toString(hb);
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> searchRawMemory(Pattern pattern) {
+        List<String> results = new ArrayList<>();
+        HashSet<String> seen = new HashSet<>();
+        
+        if (heapFile == null || !heapFile.exists()) {
+            return results;
+        }
+
+        try (java.io.RandomAccessFile raf = new java.io.RandomAccessFile(heapFile, "r")) {
+            long fileSize = raf.length();
+            long chunkSize = 1024 * 1024; // 1MB chunks
+            byte[] buffer = new byte[(int) chunkSize];
+            
+            for (long offset = 0; offset < fileSize; offset += chunkSize) {
+                if (cancelled.get()) return results;
+                
+                int readLen = (int) Math.min(chunkSize, fileSize - offset);
+                raf.seek(offset);
+                int bytesRead = raf.read(buffer, 0, readLen);
+                if (bytesRead <= 0) continue;
+                
+                // Scan for printable strings in this chunk
+                scanChunkForPattern(buffer, bytesRead, pattern, results, seen);
+            }
+        } catch (Exception e) {
+            // Ignore errors in raw scanning
+        }
+        
+        return results;
+    }
+
+    private void scanChunkForPattern(byte[] buffer, int length, Pattern pattern, 
+                                     List<String> results, HashSet<String> seen) {
+        int minPrintable = 4;  // Minimum printable sequence length
+        StringBuilder current = new StringBuilder();
+        
+        for (int i = 0; i < length; i++) {
+            byte b = buffer[i];
+            // Check if byte is printable ASCII (similar to strings command)
+            if (b >= 32 && b < 127) {
+                current.append((char) b);
+            } else {
+                // End of printable sequence
+                if (current.length() >= minPrintable) {
+                    String str = current.toString();
+                    // Try to match pattern against this string
+                    java.util.regex.Matcher matcher = pattern.matcher(str);
+                    if (matcher.find()) {
+                        String match = matcher.group();
+                        if (seen.add(match)) {
+                            results.add(match);
+                        }
+                    }
+                }
+                current.setLength(0);
+            }
+        }
+        
+        // Handle end of buffer
+        if (current.length() >= minPrintable) {
+            String str = current.toString();
+            java.util.regex.Matcher matcher = pattern.matcher(str);
+            if (matcher.find()) {
+                String match = matcher.group();
+                if (seen.add(match)) {
+                    results.add(match);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<String> searchAll(Pattern pattern) {
+        List<String> results = new ArrayList<>(searchAllTexts(pattern));
+        HashSet<String> seen = new HashSet<>(results);
+        for (String raw : searchRawMemory(pattern)) {
+            if (seen.add(raw)) {
+                results.add(raw);
+            }
+        }
         return results;
     }
 

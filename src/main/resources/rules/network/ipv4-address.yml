@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: ipv4-address
+  name: IPv4地址
+  category: network
+  severity: MEDIUM
+  description: 检测IPv4地址格式
+spec:
+  pattern: "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+  useRawMemory: false
+  minLength: 7
+  maxLength: 15
+  contextKeywords:
+    - "ip"
+    - "address"
+    - "地址"
+    - "IP"

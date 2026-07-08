@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: sensitive-log
+  name: 日志中的敏感信息
+  category: log
+  severity: MEDIUM
+  description: 检测日志输出中包含的敏感信息（密码、token、密钥等）
+spec:
+  pattern: "(ERROR|WARN|INFO|DEBUG|Exception).*(password|token|secret|key|密码|密钥|令牌)\\s*[=:]\\s*[^\\s<>\"]{6,}"
+  useRawMemory: true
+  minLength: 20
+  maxLength: 500
+  contextKeywords:
+    - "log"
+    - "logger"
+    - "日志"
+    - "Exception"

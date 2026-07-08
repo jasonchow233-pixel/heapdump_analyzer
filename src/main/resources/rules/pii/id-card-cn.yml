@@ -1,0 +1,17 @@
+kind: RegexRule
+metadata:
+  id: id-card-cn
+  name: 中国身份证号
+  category: pii
+  severity: CRITICAL
+  description: 检测18位中国居民身份证号码
+spec:
+  pattern: "[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]"
+  useRawMemory: false
+  minLength: 18
+  maxLength: 18
+  contextKeywords:
+    - "idcard"
+    - "id_card"
+    - "身份证"
+    - "证件号"

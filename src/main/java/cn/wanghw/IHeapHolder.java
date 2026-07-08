@@ -59,6 +59,22 @@ public interface IHeapHolder {
 
     List<String> searchAllTexts(Pattern pattern);
 
+    /**
+     * Scan raw memory bytes in the heap dump file (similar to 'strings' command).
+     * This can find strings in dead objects, memory fragments, and native memory
+     * that are not reachable through normal Java heap traversal.
+     * 
+     * @param pattern regex pattern to match
+     * @return list of unique matching strings found in raw memory
+     */
+    List<String> searchRawMemory(Pattern pattern);
+
+    /**
+     * Unified scan: Java object strings + raw memory, deduplicated.
+     * Replaces the need for callers to choose between searchStrings and searchRawMemory.
+     */
+    List<String> searchAll(Pattern pattern);
+
     List<Object> findClassesByPattern(String pattern);
 
     HashMap<String, String> getAllFieldValues(Object instance);

@@ -1,257 +1,445 @@
 <div align="center">
 
-<img src="docs/assets/wordmark.svg" alt="HeapDump Analyzer" width="640"/>
+<img src="docs/assets/logo.svg" alt="HeapDump Analyzer" width="120"/>
+<h1 align="center">HeapDump Analyzer</h1>
 
-# 从 JVM 内存里挖出秘密
+<p align="center">
+  <strong>从JVM内存中挖掘机密凭证的安全分析神器</strong>
+</p>
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://openjdk.org/)
-[![Version](https://img.shields.io/badge/version-1.0.0-89b4fa.svg)](#)
-[![Spiders](https://img.shields.io/badge/Spider-94-a6e3a1.svg)](#spider-插件)
-[![Rules](https://img.shields.io/badge/YAML%20规则-65-fab387.svg)](#规则引擎)
-[![PRs Welcome](https://img.shields.io/badge/PRs-欢迎-f38ba8.svg)](.github/CONTRIBUTING.md)
+<p align="center">
+  <em>直接从Java堆转储文件中提取凭证、令牌和敏感数据</em>
+</p>
 
-**HeapDump Analyzer** 是一款以安全为目标的 Java 堆内存分析工具，能够**直接从 JVM
-内存**中提取凭证、Token、配置等敏感数据——这些运行时明文从不会落盘。
+<p align="center">
+  <a href="https://github.com/wanghw/heapdump-analyzer/stargazers">
+    <img src="https://img.shields.io/github/stars/wanghw/heapdump-analyzer?style=for-the-badge&logo=github&logoColor=white&color=yellow" alt="Stars"/>
+  </a>
+  <a href="https://github.com/wanghw/heapdump-analyzer/network/members">
+    <img src="https://img.shields.io/github/forks/wanghw/heapdump-analyzer?style=for-the-badge&logo=github&logoColor=white&color=blue" alt="Forks"/>
+  </a>
+  <a href="https://github.com/wanghw/heapdump-analyzer/issues">
+    <img src="https://img.shields.io/github/issues/wanghw/heapdump-analyzer?style=for-the-badge&logo=github&logoColor=white&color=red" alt="Issues"/>
+  </a>
+  <a href="https://github.com/wanghw/heapdump-analyzer/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/wanghw/heapdump-analyzer?style=for-the-badge&logo=apache&logoColor=white&color=green" alt="License"/>
+  </a>
+</p>
 
-它在一个开源工具里集成了**堆内存解析**、**94 个 Spider 插件**、**可扩展的 YAML 规则引擎**、
-**凭证存活验证**、**浏览器 Web UI**、**JavaFX 桌面 GUI** 与 **HTML 报告导出**，专为红队、
-渗透测试人员与 SRE 设计——回答"这台 JVM 此刻到底握着哪些秘密"。
+<p align="center">
+  <a href="https://openjdk.org/">
+    <img src="https://img.shields.io/badge/Java-17%2B-orange?style=flat-square&logo=openjdk&logoColor=white" alt="Java"/>
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/Spiders-94-brightgreen?style=flat-square" alt="Spiders"/>
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/YAML%20Rules-65-yellow?style=flat-square" alt="Rules"/>
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/Web%20UI-%E2%9C%94-blue?style=flat-square" alt="Web UI"/>
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/GUI-%E2%9C%94-purple?style=flat-square" alt="GUI"/>
+  </a>
+  <a href="https://github.com/wanghw/heapdump-analyzer/pulls">
+    <img src="https://img.shields.io/badge/PRs-welcome-pink?style=flat-square" alt="PRs Welcome"/>
+  </a>
+</p>
+
+<p align="center">
+  <a href="#快速开始">快速开始</a> •
+  <a href="#核心功能">核心功能</a> •
+  <a href="#截图">截图</a> •
+  <a href="#对比">对比</a> •
+  <a href="README.md">English</a> •
+  <a href="docs/cases/">案例</a>
+</p>
 
 </div>
 
 ---
 
-## 背景
+## 为什么需要 HeapDump Analyzer?
 
-当 Java 应用发生 OOM、被 `jmap` 触发或经 JMX/JFR 抓取后，磁盘上会落下一个 `.hprof`
-堆转储。传统工具（Eclipse MAT、JIFA）帮你**诊断内存泄漏**；**HeapDump Analyzer** 回答另一个问题：
+当Java应用发生OOM、执行`jmap`转储或触发JMX/JFR时,`.hprof`堆转储文件会落地到磁盘。传统工具(Eclipse MAT、JIFA)帮助你诊断**内存泄漏**,但HeapDump Analyzer回答一个不同的问题:
 
-> *这台 JVM 内存里此刻有哪些秘密？*
+> **这个JVM此刻内存中持有哪些机密凭证?**
 
-数据库密码、Redis Token、AWS 密钥、JWT 签名密钥、Shiro 密钥、Nacos 凭证、OAuth
-客户端密钥、云服务 Token——全部以明文字段存在于堆对象中。本工具用 94 个专用 Spider 与
-65 条 YAML 规则枚举它们，并可选地对凭证调用云厂商 API 验证是否仍**LIVE**（类似 TruffleHog）。
+数据库密码、Redis认证令牌、AWS密钥、JWT签名密钥、Shiro密钥、Nacos凭证、OAuth客户端密钥、云服务令牌...所有这些都以**明文字段**形式存活在堆对象中。HeapDump Analyzer通过94个专用Spider插件和65条YAML规则枚举它们,并可选地验证这些凭证是否仍然**有效(LIVE)**。
 
-## 竞品对比
+---
 
-| 特性 | **HeapDump Analyzer** | JDumpSpider | heapdump_tool | Eclipse MAT |
-|---|:---:|:---:|:---:|:---:|
-| JDK 兼容 | 8 / 11 / 17 / 21 + GraalVM | 仅 1.8 | 任意 | 任意 |
-| Spider 插件 | **94**（10 大类） | ~20 | 关键词扫描 | — |
-| 可扩展规则引擎 | ✅ YAML + Java | ❌ 硬编码 | ❌ | N/A |
-| 凭证存活验证 | ✅ LIVE / EXPIRED / UNKNOWN | ❌ | ❌ | N/A |
-| HTML 报告导出 | ✅ 自包含 | ❌ | ❌ | ❌ |
-| Web UI（浏览器仪表盘） | ✅ | ❌ | ❌ | ❌ |
-| 桌面 GUI | ✅ JavaFX | ❌ | ❌ | ✅ RCP |
-| REPL（OQL 探索） | ✅ | ❌ | ✅ | ❌ |
-| 并行扫描 | ✅ `--parallel --threads N` | ❌ | ❌ | ❌ |
-| 批量扫描 | ✅ `--batch <dir>` | ❌ | ❌ | ❌ |
-| 维护状态 | **活跃** | 停滞 | 活跃 | 活跃 |
-| 协议 | Apache-2.0 | Apache-2.0 | — | EPL |
+## 核心功能
 
-## 三步上手
+### 🔥 突破性的凭证提取能力
 
-```bash
-# 1. 构建 fat jar（需 JDK 17+）
-./start.sh build
+- **94个Spider插件** - 远超同类工具,覆盖10大类:
+  - 🔑 **云服务**: AWS, GCP, Azure, 阿里云, 腾讯云, 华为云, K8s, Docker Registry
+  - 💾 **数据库**: HikariCP, Druid, MyBatis, ClickHouse, HBase, Neo4j, InfluxDB
+  - 🚀 **缓存**: Redis (Lettuce/Jedis), Memcached
+  - 🛡️ **认证**: Shiro, Spring Security, SA-Token, JWT, OAuth2
+  - ⚙️ **配置中心**: Nacos, Apollo, Spring Cloud Config, Dubbo, ZooKeeper
+  - 📨 **消息队列**: Kafka, RocketMQ, RabbitMQ, ActiveMQ, Pulsar
+  - 🌐 **HTTP客户端**: OkHttp拦截器, RestTemplate, Apache HttpClient, Feign
+  - 🏗️ **微服务框架**: RuoYi, JeecgBoot, Eladmin, Pig, SpringBlade
+  - 🔐 **凭证搜索**: TokenSearch, SessionSearch, CookieThief
+  - 📊 **版本依赖**: Maven/Gradle依赖版本扫描
 
-# 2. 扫描堆转储——文本输出到终端
-./start.sh cli /path/to/heapdump.hprof
+### 🎨 多样化的使用方式
 
-# 3. 或生成可分享的 HTML 报告
-java -jar target/heapdump-analyzer.jar /path/to/heapdump.hprof --format html -o report.html
-```
+- **🌐 Web UI** - 浏览器仪表板,支持暗色/亮色主题,实时统计图表,筛选过滤
+- **🖥️ Swing GUI** - 现代化桌面界面(FlatLaf主题),拖拽打开文件,实时预览
+- **⚡ CLI** - 命令行模式,适合自动化脚本和CI/CD集成
+- **🔍 REPL** - 交互式OQL探索模式,类似jshell的heap探索
+- **📦 批量扫描** - 一键扫描整个目录的所有堆转储文件
 
-直接启动 Web UI，在浏览器里点开仪表盘：
+### 🔐 实时凭证验证(类似TruffleHog)
 
-```bash
-./start.sh web            # http://localhost:9090
-```
+| 验证模式 | 功能 | 网络? |
+|---|---|:---:|
+| `--validate` | 离线格式校验(如AWS AKIA前缀、密钥校验位) | ❌ |
+| `--validate-live` | 调用云API,标记每个凭证为 **LIVE/EXPIRED/UNKNOWN** | ✅ |
 
-## 运行模式
+支持的实时验证器: **AWS**, **GitHub**, **Stripe**, **Slack**, **Telegram**  
+离线格式验证器: Aliyun, GCP, Twilio, SendGrid, Firebase, JWK
 
-| 模式 | 命令 | 用途 |
-|---|---|---|
-| **Web UI** | `./start.sh web [端口]` | 浏览器仪表盘：Severity 卡片、图表、过滤、导出 |
-| **桌面 GUI** | `./start.sh desktop` | JavaFX 本地分析 |
-| **CLI** | `./start.sh cli <文件>` | 无头/脚本化扫描 |
-| **批量** | `./start.sh batch <目录>` | 一次扫描目录下所有堆转储 |
-| **REPL** | `./start.sh repl <文件>` | 交互式 OQL / 堆探索 |
+> ⚠️ **警告**: `--validate-live`会发起真实的外部API调用,可能触发云平台的威胁检测系统(如AWS GuardDuty)。仅在授权资产上使用。
 
-## CLI 参数
-
-```text
-heapdump-analyzer <堆文件> [选项]
-
-输出：
-  -f, --format <text|json|csv|html>   输出格式（默认 text）
-  -o, --output <文件>                 输出文件（默认 stdout）
-
-扫描：
-  -s, --spider <名称,名称|all>        只跑指定 Spider
-      --severity <CRITICAL|HIGH|MEDIUM|LOW|INFO>  最低严重等级（默认 INFO）
-      --parallel                      开启并行扫描
-      --threads <N>                   线程数（默认 CPU 核数）
-      --batch <目录>                   扫描目录下所有堆转储
-
-规则引擎：
-      --rules <目录>                   从目录加载额外 YAML 规则
-      --rules-only                    只跑规则引擎，跳过 Spider
-      --list-rules                    列出所有规则后退出
-      --validate                      离线格式校验候选凭证
-      --validate-live                 在线验证（调用云 API！）
-                                      警告：可能触发云告警，默认关闭。
-
-发现：
-  -l, --list                          列出所有 Spider 后退出
-      --extract <正则>                 导出所有匹配正则的字符串
-
-其它：
-      --web                           启动 Web UI 服务
-      --port <N>                      Web UI 端口（默认 9090）
-      --desktop / --gui               启动 JavaFX 桌面 GUI
-      --repl                          启动交互式 REPL
-  -h, --help                          显示帮助
-```
-
-## Spider 插件
-
-94 个 Spider 分布在 10 大类，按命名 JVM 类提取结构化数据：
-
-| 类别 | 示例 |
-|---|---|
-| 数据库 | HikariCP、Druid、MyBatis、ClickHouse、HBase、Neo4j、InfluxDB |
-| 缓存 | Redis（Lettuce/Jedis）、Memcached |
-| 认证 | Shiro、Spring Security、SA-Token、CAS、PAC4J、JWT 密钥 |
-| 云服务 | AWS、GCP、Azure、阿里云、华为云、腾讯云、K8s SA、Docker registry |
-| 配置 | Nacos、Apollo、Spring Cloud、Dubbo、Seata、ZooKeeper |
-| 消息队列 | Kafka、RocketMQ、RabbitMQ、ActiveMQ、Pulsar |
-| 注册中心 | Eureka、Nacos、Consul、ZooKeeper |
-| 框架 | RuoYi、JeecgBoot、Eladmin、Pig、SpringBlade、HuTool |
-| HTTP | OkHttp 拦截器、RestTemplate、Apache HttpClient、Feign |
-| 凭证 | TokenSearch、SessionSearch、AuthTokenSearch、CookieThief |
-
-列出全部：
-
-```bash
-java -jar target/heapdump-analyzer.jar --list
-```
-
-## 规则引擎
-
-YAML 规则引擎让你**无需重新编译**即可新增秘密匹配模式。规则从内置 `resources/rules/`
-加载，并自动从 `~/.heapdump-analyzer/rules/` 加载。
+### 📊 YAML规则引擎 - 无需重编译即可扩展
 
 ```yaml
-# ~/.heapdump-analyzer/rules/my-team-token.yml
+# ~/.heapdump-analyzer/rules/my-token.yml
 kind: RegexRule
 metadata:
   id: my-team-token
-  name: 内部团队 Token
+  name: Internal Team Token
   category: auth
-  severity: HIGH
-  description: 检测内部 "team-xxxx" bearer token
+  severity: CRITICAL
+  description: 检测内部"team-xxxx" bearer令牌
 spec:
   pattern: 'team-[A-Za-z0-9]{40}'
-  validator: GitHubTokenValidator   # 可选
+  validator: GitHubTokenValidator  # 可选
 ```
 
-支持的规则类型：`RegexRule`（扫描所有字符串）与 `ClassRule`（从命名类提取字段）。
-**5 分钟加一个 Spider / 规则** 教程见 [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)。
+**规则类型支持**:
+- `RegexRule` - 扫描所有字符串池
+- `ClassRule` - 提取特定类的字段值
 
-## 凭证验证
+**65条内置规则**,涵盖:
+- ☁️ 云服务密钥(AWS, Azure, GCP, Aliyun, Tencent等)
+- 🔑 认证令牌(GitHub, GitLab, Slack, Stripe等)
+- 💾 数据库连接(MySQL, PostgreSQL, MongoDB等)
+- 📱 个人信息(邮箱、手机号、身份证等)
+- 🔒 密码/加密字段(BCrypt, 明文密码等)
 
-分两级，默认全部关闭以避免噪声：
+### 🚀 性能优化
 
-| 参数 | 行为 | 联网? |
-|---|---|:---:|
-| `--validate` | 离线格式/启发式校验（如 AKIA 前缀、密钥校验位） | ❌ |
-| `--validate-live` | 调用云厂商 API，给每个凭证打 `LIVE` / `EXPIRED` / `UNKNOWN` | ✅ |
+- **并行扫描** - `--parallel --threads N` (默认使用CPU核心数)
+- **批量扫描** - `--batch <dir>` 一键扫描整个目录
+- **原始内存扫描** - `--extract-raw` 类似`strings`命令,扫描整个文件
+- **分类过滤** - `--category <category>` 只扫描特定类别
 
-支持在线验证：**AWS**、**GitHub**、**Stripe**、**Slack**、**Telegram**；离线格式校验：
-阿里云 / GCP / Twilio / SendGrid / Firebase / JWK。
+### 📄 多格式输出
 
-> ⚠️ **`--validate-live` 会发起真实外联 API 调用。** AWS GuardDuty 等云威胁检测可能
-> 告警。仅在你拥有并授权测试的资产上启用。
+- **HTML报告** - 单文件自包含,包含严重性统计、分类图表、可筛选表格
+- **JSON** - 结构化数据,适合API集成
+- **CSV** - 表格格式,适合数据分析
+- **文本** - 传统命令行输出
 
-## HTML 报告
-
-```bash
-java -jar target/heapdump-analyzer.jar heap.hprof --format html -o report.html
-```
-
-生成**单一自包含** HTML 文件——无外部 CDN、无缺图——含 Severity 统计、分类图表与可过滤
-详情表。可直接邮件 / Slack / 工单分享，离线可读。
-
-## 配置
-
-| 位置 | 用途 |
-|---|---|
-| `~/.heapdump-analyzer/rules/` | 放自定义 YAML 规则，自动加载 |
-| `--rules <目录>` | 指向任意规则目录 |
+---
 
 ## 截图
 
-### Web UI — 暗色仪表盘
+### Web UI - 深色主题仪表板
 
-默认首屏：顶部 Severity 卡片、分类图表与 Top Spider 命中图，下方是可过滤的 Spider
-结果表。暗色主题为默认。
+<img src="docs/assets/screenshots/web-dashboard-dark.png" alt="Web UI深色仪表板" width="880"/>
 
-<img src="docs/assets/screenshots/web-dashboard-dark.png" alt="Web UI 暗色仪表盘" width="880"/>
+默认着陆视图:顶部严重性卡片,分类&Spider图表,可筛选的结果表格
 
-### Web UI — 亮色仪表盘
+### Web UI - 浅色主题仪表板
 
-同一仪表盘切换到亮色主题（右上角 ☀️ 按钮切换），适合白天阅读与明亮投影环境下的
-屏幕分享。
+<img src="docs/assets/screenshots/web-dashboard-light.png" alt="Web UI浅色仪表板" width="880"/>
 
-<img src="docs/assets/screenshots/web-dashboard-light.png" alt="Web UI 亮色仪表盘" width="880"/>
+从右上角☀️按钮切换浅色主题,适合日间阅读和屏幕共享
 
-### Web UI — Spider 结果
+### Swing GUI - 现代化桌面界面
 
-每条命中的详情：Spider 名称、分类、Severity 标签，以及从堆里提取出的原始明文（可折叠
-`<pre>`，支持 Severity 横向过滤与关键词搜索）。
+<img src="docs/assets/screenshots/ScreenShot_2026-07-07_194206_723.png" alt="Swing GUI" width="880"/>
 
-<img src="docs/assets/screenshots/web-spider-results.png" alt="Web UI Spider 结果表" width="880"/>
+FlatLaf主题,左右分栏布局,实时预览详情
 
-### Web UI — 规则引擎
+---
 
-**Rule engine** 标签页列出每条 YAML 规则的命中——规则名、分类、Severity，以及每条
-匹配字符串（离线校验与在线验证结果内联展示）。
+## 快速开始(3步)
 
-<img src="docs/assets/screenshots/web-rules-dark.png" alt="Web UI 规则引擎标签页" width="880"/>
+```bash
+# 1. 构建
+./start.sh build
 
-> 截图基于示例堆转储拍摄，文档展示时对敏感数据做了显示层脱敏。真实扫描会直接展示
-> 明文秘密——这正是本工具的目的。
+# 2. 扫描堆转储 - 文本输出到stdout
+./start.sh cli /path/to/heapdump.hprof
 
-## 贡献
+# 3. 或生成可分享的HTML报告
+java -jar target/heapdump-analyzer.jar heapdump.hprof --format html -o report.html
+```
 
-欢迎贡献——而且刻意做得简单。最快的帮忙方式是为你遇到的框架/凭证**新增一个 Spider 或
-YAML 规则**。5 分钟教程、本地构建（`./start.sh build`）与 PR 清单见
-[`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)。
+**打开Web UI浏览器仪表板**:
+
+```bash
+./start.sh web  # http://localhost:9090
+```
+
+**打开桌面GUI**:
+
+```bash
+./start.sh desktop
+```
+
+---
+
+## 与同类工具对比
+
+| 功能 | **HeapDump Analyzer** | JDumpSpider | heapdump_tool | Eclipse MAT |
+|---|:---:|:---:|:---:|:---:|
+| JDK兼容性 | 8/11/17/21 + GraalVM | 仅1.8 | any | any |
+| Spider插件 | **94** (10大类) | ~20 | 关键词扫描 | — |
+| 可扩展规则引擎 | ✅ YAML + Java | ❌ 硬编码 | ❌ | N/A |
+| 实时凭证验证 | ✅ LIVE/EXPIRED/UNKNOWN | ❌ | ❌ | N/A |
+| HTML报告导出 | ✅ 单文件自包含 | ❌ | ❌ | ❌ |
+| Web UI | ✅ 浏览器仪表板 | ❌ | ❌ | ❌ |
+| 桌面GUI | ✅ Swing(FlatLaf) | ❌ | ❌ | ✅ RCP |
+| REPL(OQL探索) | ✅ | ❌ | ✅ | ❌ |
+| 并行扫描 | ✅ `--parallel --threads N` | ❌ | ❌ | ❌ |
+| 批量扫描 | ✅ `--batch <dir>` | ❌ | ❌ | ❌ |
+| 维护状态 | **活跃开发** | 停滞 | 活跃 | 活跃 |
+| 许可证 | Apache-2.0 | Apache-2.0 | — | EPL |
+
+---
+
+## CLI完整参数
+
+```text
+heapdump-analyzer <heapfile> [options]
+
+输出格式:
+  -f, --format <text|json|csv|html>   输出格式(默认: text)
+  -o, --output <file>                 输出文件(默认: stdout)
+
+扫描控制:
+  -s, --spider <name,name|all>        运行特定Spider
+      --severity <CRITICAL|HIGH|MEDIUM|LOW|INFO>  最小严重级别(默认: INFO)
+      --category <category>           分类过滤: credential, pii, session等
+      --parallel                      启用并行扫描
+      --threads <N>                   线程数(默认: CPU核心数)
+      --batch <dir>                   批量扫描目录中所有堆转储文件
+
+规则引擎:
+      --rules <dir>                   从目录加载额外YAML规则
+      --rules-only                    仅运行规则引擎,跳过Spider
+      --list-rules                    列出所有规则并退出
+      --validate                      离线格式验证(无网络调用)
+      --validate-live                 在线验证(调用云API!)
+                                      警告:可能触发云平台告警
+
+发现模式:
+  -l, --list                          列出所有Spider并退出
+      --extract <regex>               提取匹配正则的所有字符串
+      --extract-raw <regex>           原始内存扫描(类似strings命令)
+
+其他:
+      --swing                         启动Swing GUI(默认)
+      --web                           启动Web UI服务器
+      --port <N>                      Web UI端口(默认: 9090)
+      --repl                          启动交互式REPL
+  -h, --help                          显示帮助
+```
+
+---
+
+## 使用场景
+
+### 1️⃣ 安全审计与渗透测试
+
+```bash
+# 扫描生产环境堆转储,发现暴露的凭证
+java -jar heapdump-analyzer.jar prod.hprof --severity CRITICAL --format html -o audit-report.html
+```
+
+### 2️⃣ 事件响应与凭证轮换
+
+```bash
+# 验证泄露凭证是否仍然有效
+java -jar heapdump-analyzer.jar leaked.hprof --validate-live --severity HIGH -o live-credentials.txt
+```
+
+### 3️⃣ CI/CD集成
+
+```bash
+# 自动化扫描作为安全检查步骤
+./start.sh cli artifact.hprof --format json --severity HIGH --rules-only
+```
+
+### 4️⃣ 批量历史分析
+
+```bash
+# 扫描过去一周的所有堆转储文件
+./start.sh batch /var/log/heapdumps/ --format html
+```
+
+---
+
+## 实战案例
+
+查看完整的案例研究: [从单个堆转储中提取50+云凭证](docs/cases/extract-50-cloud-credentials.md)
+
+**真实案例亮点**:
+- 从单个Spring Boot网关的1.4GB堆转储中提取**52个不同凭证源**
+- 38个CRITICAL级别凭证,24个HIGH级别
+- 通过实时验证发现8个**LIVE凭证**,立即轮换
+- 涵盖云IAM(12),认证(11),数据库(9),消息队列(5),配置中心(7)
+
+---
+
+## 技术架构
+
+### Spider插件体系
+
+基于Java SPI (ServiceLoader)的可插拔架构:
+
+```java
+public interface ISpider {
+    String getName();
+    String getCategory();
+    String getDescription();
+    Severity getSeverity();
+    String sniff(IHeapHolder heapHolder);
+}
+```
+
+**实现方式**:
+- 直接从JVM类实例提取字段值(如`BasicAWSCredentials`)
+- 扫描字符串池(如正则匹配AWS密钥模式)
+- 组合策略(类字段+字符串池)
+
+### YAML规则引擎
+
+```java
+public class RuleEngine {
+    private List<Rule> rules;
+    private boolean validateEnabled;
+    private boolean validateLiveEnabled;
+    private boolean parallelEnabled;
+
+    public List<RuleResult> execute(IHeapHolder heapHolder);
+    public List<EnhancedResult> executeEnhanced(IHeapHolder heapHolder);
+}
+```
+
+**规则类型**:
+- `RegexRule` - 正则表达式扫描字符串池
+- `ClassRule` - 直接从类实例提取字段
+
+### 敏感信息分类系统
+
+```java
+public enum SensitivityCategory {
+    CREDENTIAL("🔑", "凭证", "#f38ba8"),    // 密码、密钥、Token
+    PII("📱", "个人信息", "#fab387"),        // 手机、邮箱、身份证
+    SESSION("🍪", "会话数据", "#f9e2af"),    // Cookie、Session
+    NETWORK("🌐", "网络信息", "#89dceb"),    // IP、URL
+    DATABASE("💾", "数据库", "#cba6f7"),    // 连接字符串、密码
+    CLOUD("☁️", "云服务", "#f5c2e7"),       // AWS、Azure、GCP密钥
+    CONFIG("⚙️", "配置信息", "#94e2d5");    // 配置文件敏感项
+}
+```
+
+### 堆转储解析器
+
+- **GraalVM VisualVM Heap Library** - JDK 9+ 支持HPROF格式
+- **NetBeans Profiler Heap Library** - JDK 8兼容
+- **自动版本检测** - 根据文件格式和Java class version选择解析器
+
+---
+
+## 贡献指南
+
+我们**刻意简化了贡献流程**,最快的参与方式是**添加一个Spider或YAML规则**:
+
+### 添加新Spider(5分钟)
+
+```java
+// src/main/java/cn/wanghw/spider/MyCloudCredentialSearch.java
+public class MyCloudCredentialSearch implements ISpider {
+    public String getName() { return "MyCloudCredentialSearch"; }
+    public String getCategory() { return "cloud"; }
+    public String getDescription() { return "Extract MyCloud credentials"; }
+    public Severity getSeverity() { return Severity.CRITICAL; }
+
+    public String sniff(IHeapHolder heapHolder) {
+        Object clazz = heapHolder.findClass("com.mycloud.Credentials");
+        // ... 提取逻辑
+    }
+}
+```
+
+然后添加到 `src/main/resources/META-INF/services/cn.wanghw.ISpider`
+
+### 添加新YAML规则(2分钟)
+
+```yaml
+# src/main/resources/rules/cloud/mycloud-key.yml
+kind: RegexRule
+metadata:
+  id: mycloud-api-key
+  name: MyCloud API Key
+  category: cloud
+  severity: CRITICAL
+  description: Detect MyCloud API keys
+spec:
+  pattern: 'MC-[A-Za-z0-9]{32}'
+```
+
+详见: [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+
+---
 
 ## 致谢
 
-站在巨人的肩膀上：
+HeapDump Analyzer建立在以下优秀项目的基础上:
 
-- [JDumpSpider](https://github.com/whwlsfb/JDumpSpider) —— 原始 Spider 思路与堆解析
-- [Eclipse MAT](https://github.com/eclipse-mat/mat) & [JIFA](https://github.com/eclipse/jifa) —— 堆转储参考实现
-- [TruffleHog](https://github.com/trufflesecurity/trufflehog) & [Gitleaks](https://github.com/gitleaks/gitleaks) —— 凭证验证灵感
-- GraalVM VisualVM 与 NetBeans profiler 库 —— HPROF 解析
+- [JDumpSpider](https://github.com/whwlsfb/JDumpSpider) - 原始Spider概念与堆解析
+- [Eclipse MAT](https://github.com/eclipse-mat/mat) & [JIFA](https://github.com/eclipse/jifa) - 堆转储参考
+- [TruffleHog](https://github.com/trufflesecurity/trufflehog) & [Gitleaks](https://github.com/gitleaks/gitleaks) - 凭证验证灵感
+- GraalVM VisualVM & NetBeans Profiler Libraries - HPROF解析
 
-## 协议
+---
 
-[Apache License 2.0](LICENSE) © wanghw 及贡献者。
+## 法律声明与负责任使用
 
-## 合规说明
+本工具读取你运营或明确授权评估的JVM堆转储中的明文机密。它**不执行任何漏洞利用**。凭证实时验证仅识别密钥是否有效,不窃取数据。仅用于**防御性审计、事件响应和授权安全测试**。
 
-本工具仅从**你运营或明确授权评估**的 JVM 堆转储中读取明文秘密，**不进行任何利用**。
-凭证在线验证仅判断密钥是否仍有效，不外泄数据。请仅用于防御性审计、应急响应与授权安全测试。
+---
+
+## 许可证
+
+Apache License 2.0 © wanghw and contributors.
 
 ---
 
 <div align="center">
 
-**[English](README.md)** · [贡献指南](.github/CONTRIBUTING.md) · [案例集](docs/cases/) · [升级规划](docs/UPGRADE_PLAN_v4.0.md)
+<p>
+  <a href="README.md">English</a> •
+  <a href=".github/CONTRIBUTING.md">贡献指南</a> •
+  <a href="docs/cases/">实战案例</a> •
+  <a href="https://github.com/wanghw/heapdump-analyzer/issues">问题反馈</a>
+</p>
+
+<p>
+  如果这个项目帮助了你的安全工作,请考虑给一个 ⭐️ Star!
+</p>
+
+**Made with ❤️ by the security community**
 
 </div>

@@ -1,0 +1,19 @@
+kind: RegexRule
+metadata:
+  id: phone-cn
+  name: 中国大陆手机号
+  category: pii
+  severity: HIGH
+  description: 检测中国大陆手机号码（支持86国际格式）
+spec:
+  pattern: "(86)?1[3-9]\\d{9}"
+  useRawMemory: false
+  minLength: 11
+  maxLength: 13
+  contextKeywords:
+    - "phone"
+    - "mobile"
+    - "手机"
+    - "电话"
+    - "telephone"
+    - "tel"

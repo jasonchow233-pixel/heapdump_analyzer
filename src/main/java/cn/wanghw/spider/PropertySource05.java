@@ -28,7 +28,8 @@ public class PropertySource05 implements ISpider {
             for (Object instance : heapHolder.getInstances(clazz)) {
                 values.putAll(heapHolder.arrayDump(heapHolder.getMap(instance)));
             }
-            result.append(HashMapUtils.dumpString(values, false));
+            // 使用对齐格式输出（排序 + 自动对齐）
+            result.append(HashMapUtils.dumpStringAligned(values, false, false, false, true));
         } catch (Exception ex) {
             LOGGER.warn("Spider {} failed: {}", getName(), ex.getMessage());
         }
