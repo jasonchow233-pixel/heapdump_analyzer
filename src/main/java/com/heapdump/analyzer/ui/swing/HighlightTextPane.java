@@ -45,43 +45,11 @@ public class HighlightTextPane extends JTextPane {
             doc.remove(0, doc.getLength());
             if (text == null || text.isEmpty()) return;
 
-            String[] lines = text.split("\n");
-            for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-
-                if (line.contains(":") || line.contains("=")) {
-                    int sepIndex = findSeparator(line);
-                    if (sepIndex > 0) {
-                        String key = line.substring(0, sepIndex);
-                        String sep = String.valueOf(line.charAt(sepIndex));
-                        String value = line.substring(sepIndex + 1);
-
-                        doc.insertString(doc.getLength(), key, keyStyle);
-                        doc.insertString(doc.getLength(), sep, separatorStyle);
-                        doc.insertString(doc.getLength(), value, valueStyle);
-                    } else {
-                        doc.insertString(doc.getLength(), line, normalStyle);
-                    }
-                } else {
-                    doc.insertString(doc.getLength(), line, normalStyle);
-                }
-
-                if (i < lines.length - 1) {
-                    doc.insertString(doc.getLength(), "\n", normalStyle);
-                }
-            }
+            // 直接插入文本，不进行格式化解析（避免显示错乱）
+            doc.insertString(0, text, normalStyle);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-    }
-
-    private int findSeparator(String line) {
-        int colonIdx = line.indexOf(":");
-        int equalIdx = line.indexOf("=");
-
-        if (colonIdx < 0) return equalIdx;
-        if (equalIdx < 0) return colonIdx;
-        return Math.min(colonIdx, equalIdx);
     }
 
     public String getPlainText() {

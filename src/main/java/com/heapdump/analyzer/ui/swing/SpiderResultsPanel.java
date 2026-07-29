@@ -1,6 +1,7 @@
 package com.heapdump.analyzer.ui.swing;
 
 import cn.wanghw.Severity;
+import cn.wanghw.SensitivityType;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.heapdump.analyzer.ui.swing.renderer.*;
 import net.miginfocom.swing.MigLayout;
@@ -331,10 +332,12 @@ public class SpiderResultsPanel extends JPanel {
 
         String search = filterBar.getSearchText();
         Severity severity = filterBar.getSeverityFilter();
+        SensitivityType type = filterBar.getSensitivityTypeFilter();
 
         rowSorter.setRowFilter(RowFilter.andFilter(Arrays.asList(
             createSearchFilter(search, new int[]{0, 1, 4}),
-            createSeverityFilter(severity, 2)
+            createSeverityFilter(severity, 2),
+            createSensitivityTypeFilter(type, 4)
         )));
 
         filterBar.setResultCount(rowSorter.getViewRowCount());
@@ -373,6 +376,27 @@ public class SpiderResultsPanel extends JPanel {
                 } catch (Exception e) {
                     return true;
                 }
+            }
+        };
+    }
+
+    /**
+     * 新增：敏感类型过滤
+     * 对列4（Full Data）应用正则匹配
+     */
+    private RowFilter<DefaultTableModel, Integer> createSensitivityTypeFilter(
+            SensitivityType type, int col) {
+        if (type == null || type == SensitivityType.ALL) {
+            return RowFilter.regexFilter(".*");
+        }
+        return new RowFilter<>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                Object val = entry.getValue(col);
+                if (val == null) return false;
+                String fullData = val.toString();
+                // 使用正则模式匹配
+                return type.matches(fullData);
             }
         };
     }
