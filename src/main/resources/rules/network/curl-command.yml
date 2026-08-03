@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: curl-command
+  name: curl命令
+  category: network
+  severity: INFO
+  description: 检测堆内存中的curl命令格式数据
+spec:
+  pattern: "curl\\s+(-[A-Za-z]+\\s+)*[\"']?https?://[^\\s\"']+[\"']?"

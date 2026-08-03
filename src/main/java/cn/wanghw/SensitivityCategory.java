@@ -43,7 +43,12 @@ public enum SensitivityCategory {
     /**
      * 配置信息（配置文件中的敏感信息）
      */
-    CONFIG("⚙️", "配置信息", "#94e2d5", "#7dc4e4");
+    CONFIG("⚙️", "配置信息", "#94e2d5", "#7dc4e4"),
+
+    /**
+     * 数据格式（JSON、XML等结构化数据）
+     */
+    DATA("📦", "数据格式", "#b4befe", "#cba6f7");
 
     private final String icon;
     private final String name;
@@ -127,6 +132,8 @@ public enum SensitivityCategory {
             case "mq":
             case "framework":
                 return CONFIG;
+            case "data":
+                return DATA;
             default:
                 return CONFIG;
         }

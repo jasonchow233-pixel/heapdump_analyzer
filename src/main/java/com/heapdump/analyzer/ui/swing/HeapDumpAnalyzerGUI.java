@@ -36,6 +36,7 @@ public class HeapDumpAnalyzerGUI extends JFrame {
     private DetailPanel detailPanel;
 
     private File currentFile;
+    private IHeapHolder currentHeapHolder;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private volatile Future<?> currentTask;
@@ -288,6 +289,7 @@ public class HeapDumpAnalyzerGUI extends JFrame {
         try {
             Main mainInstance = new Main();
             IHeapHolder holder = mainInstance.createHeapHolder(file);
+            currentHeapHolder = holder;
 
             SwingUtilities.invokeLater(() ->
                 spiderResultsPanel.setStatus("Running spider scan…"));
@@ -678,6 +680,23 @@ public class HeapDumpAnalyzerGUI extends JFrame {
                 break;
             }
         }
+    }
+
+    public void showCustomSearchDialog() {
+        if (currentHeapHolder == null) {
+            JOptionPane.showMessageDialog(this,
+                "Please load a heap dump file first",
+                "No Heap Dump Loaded",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        CustomSearchDialog dialog = new CustomSearchDialog(this, currentHeapHolder);
+        dialog.setVisible(true);
+    }
+
+    public void showSearchResultDetail(String title, String detail) {
+        detailPanel.setDetail(title, detail);
     }
 
     public static void launchGUI(String[] args) {

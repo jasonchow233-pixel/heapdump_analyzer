@@ -31,6 +31,7 @@ public class SpiderResultsPanel extends JPanel {
     private JCheckBox rawMemoryCheckbox;
     private JButton openButton;
     private JButton exportButton;
+    private JButton customSearchButton;
 
     private final List<Object[]> resultsData = new ArrayList<>();
     private TableRowSorter<DefaultTableModel> rowSorter;
@@ -84,6 +85,13 @@ public class SpiderResultsPanel extends JPanel {
         exportButton.setToolTipText("Export results (Ctrl+S)");
         exportButton.addActionListener(e -> mainGUI.exportResults());
         toolbar.add(exportButton, "gapright 8");
+
+        customSearchButton = new JButton("Custom Search", new FlatSVGIcon("icons/search.svg", 16, 16));
+        customSearchButton.putClientProperty("JButton.buttonType", "roundRect");
+        customSearchButton.setFont(ThemeConfig.FONT_CAPTION);
+        customSearchButton.setToolTipText("Search custom string in heap dump with context");
+        customSearchButton.addActionListener(e -> mainGUI.showCustomSearchDialog());
+        toolbar.add(customSearchButton, "gapright 8");
 
         return toolbar;
     }

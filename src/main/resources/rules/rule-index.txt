@@ -68,9 +68,14 @@ password/username-password.yml
 password/password-field.yml
 password/bcrypt.yml
 
-# Network (1)
+# Network (4)
 network/ipv4-address.yml
 network/url-credentials.yml
+network/http-request.yml
+network/curl-command.yml
+
+# Data (1)
+data/json-data.yml
 
 # Log (1)
 log/sensitive-log.yml

@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: http-request
+  name: HTTP请求
+  category: network
+  severity: INFO
+  description: 检测堆内存中的HTTP请求格式数据（GET/POST/PUT/DELETE等请求行）
+spec:
+  pattern: "(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)\\s+\\S+\\s+HTTP/\\d\\.\\d"

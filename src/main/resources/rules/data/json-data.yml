@@ -1,0 +1,9 @@
+kind: RegexRule
+metadata:
+  id: json-data
+  name: JSON数据
+  category: data
+  severity: INFO
+  description: 检测堆内存中的JSON格式数据（包含键值对的对象）
+spec:
+  pattern: "\\{\\s*\"[^\"]+\"\\s*:\\s*(\"[^\"]*\"|\\d+|true|false|null|\\[|\\{)[^}]*\\}"
